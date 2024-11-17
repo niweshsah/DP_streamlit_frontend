@@ -38,6 +38,7 @@ def main_show_attendance():
         # Fetch attendeesFalse and attendeesTrue from respective endpoints
         # st.write("Fetching attendees data...")
         false_count, attendees_false = fetch_attendees(ATTENDEES_FALSE_URL, conference_code)
+        
         true_count, attendees_true = fetch_attendees(ATTENDEES_TRUE_URL, conference_code)
 
         # Display attendees side by side

@@ -51,7 +51,7 @@ def view_existing_images(conference_code="qwerty"):
         response.raise_for_status()
         data = response.json()
         # print("data: ", data)
-        return data.get('conferenceSponsors', [])
+        return data
     except requests.exceptions.RequestException:
         return None
 
@@ -83,7 +83,7 @@ def main_sponsor():
         </style>
     """, unsafe_allow_html=True)
     
-    st.title("Image Management System")
+    st.title("Sponsor Management System")
     
     tab1, tab2 = st.tabs(["Upload New Image", "View Existing Images"])
     
@@ -103,7 +103,7 @@ def main_sponsor():
             
             if submit_button:
                 if not name or not photo_file:
-                    st.error("Please provide an image name and upload a photo.")
+                    st.error("Please provide an sponsor name and upload a photo.")
                 else:
                     with st.spinner("Uploading image..."):
                         photo_base64 = convert_image_to_base64(photo_file)
@@ -126,7 +126,7 @@ def main_sponsor():
         if images is None:
             st.error("Failed to fetch images. Please try again later.")
         elif not images:
-            st.info("No images found.")
+            st.info("No sponsors found.")
         else:
             cols = st.columns(3)
             for idx, image in enumerate(images):

@@ -1,58 +1,94 @@
 import streamlit as st
-from pymongo import MongoClient
-import atexit
-from datetime import datetime
+import requests
+import json
 
-# MongoDB connection
-def connect_to_mongodb():
-    client = MongoClient("mongodb+srv://sahniwesh:Cg1pipueVvULDzdk@testing.4soqq.mongodb.net/")
-    atexit.register(client.close)  # Ensure client disconnects on exit
-    db = client['attendance_tracker']
-    return db['about']  # Replace with your actual collection name
+def load_current_about(conference_code):
+    """Load the current about section data"""
+    try:
+        # Replace with your actual API endpoint
+        response = requests.get(f"http://localhost:27017/user/conference/{conference_code}/eventCard/about")
+        if response.status_code == 200:
+            data = response.json()
+            return data.get('about', {'title': '', 'description': ''})
+        return {'title': '', 'description': ''}
+    except Exception as e:
+        st.error(f"Error loading current data: {str(e)}")
+        return {'title': '', 'description': ''}
 
-# Initialize MongoDB collection
-posts_collection = connect_to_mongodb()
 
-def post_content():
-    st.title("Add Post")
 
-    # Input fields for post information
-    title = st.text_input("Post Title")
-    content = st.text_area("Post Content")
-    
-    current_time = datetime.utcnow().isoformat(timespec='milliseconds') + 'Z'
-
-    # Button to add post to the database
-    if st.button("Add Post"):
-        if title and content:
-            post_data = {
-                'title': title,
-                'content': content,
-                'lastModified': current_time
-            }
-            try:
-                posts_collection.insert_one(post_data)
-                st.success("Post added successfully!")
-            except Exception as e:
-                st.error(f"Failed to add post: {str(e)}")
-        else:
-            st.error("Please fill in both the title and content.")
-
-    # Display all posts in the database with delete option
-    st.header("Posts List")
-    posts = list(posts_collection.find())
-
-    for post in posts:
-        st.subheader(f"Title: {post['title']}")
-        st.write(post['content'])
+def update_about_section(conference_code, title, description):
+    """Update the about section via API"""
+    try:
+        headers = {
+            'Content-Type': 'application/json'
+        }
         
-        # Button to delete post
-        if st.button(f"Delete {post['title']}", key=post['_id']):
-            try:
-                posts_collection.delete_one({'_id': post['_id']})
-                st.success(f"{post['title']} deleted successfully!")
-                st.rerun()  # Refresh the page to reflect the deletion
-            except Exception as e:
-                st.error(f"Failed to delete {post['title']}: {str(e)}")
+        payload = {
+            'title': title,
+            'description': description
+        }
+        
+        response = requests.post(
+            f"http://localhost:27017/user/conference/{conference_code}/eventCard/addAbout",
+            headers=headers,
+            json=payload
+        )
+        
+        if response.status_code == 200:
+            st.success("About section updated successfully!")
+            return True
+        else:
+            st.error(f"Error updating about section: {response.json().get('message', 'Unknown error')}")
+            return False
+    except Exception as e:
+        st.error(f"Error: {str(e)}")
+        return False
 
-        st.write("---")
+def main_about():
+    st.title("Conference About Section Editor")
+    
+    # Conference code input
+    # conference_code = st.text_input("Enter Conference Code")
+    
+    conference_code = st.session_state.get('current_user', 'Guest')
+    print(f"Hello from about tab, {conference_code}!")
+    
+    if conference_code:
+        # Load current about section data
+        current_about = load_current_about(conference_code)
+        
+        # Create form
+        with st.form("about_form"):
+            st.subheader("Edit About Section")
+            
+            # Show current title and allow editing
+            st.text("Current Title: " + current_about['title'])
+            new_title = st.text_input("New Title (leave empty to keep current)", "")
+            
+            # Show current description and allow editing
+            st.text("Current Description: " + current_about['description'])
+            new_description = st.text_area("New Description (leave empty to keep current)", "")
+            
+            # Submit button
+            submitted = st.form_submit_button("Update About Section")
+            
+            if submitted:
+                # Use new values if provided, otherwise keep current values
+                final_title = new_title if new_title else current_about['title']
+                final_description = new_description if new_description else current_about['description']
+                
+                # Update only if at least one field has changed
+                if final_title != current_about['title'] or final_description != current_about['description']:
+                    success = update_about_section(
+                        conference_code,
+                        final_title,
+                        final_description
+                    )
+                    if success:
+                        st.balloons()
+                else:
+                    st.info("No changes detected")
+
+if __name__ == "__main__":
+    main_about()

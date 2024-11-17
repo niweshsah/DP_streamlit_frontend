@@ -217,7 +217,8 @@ def view_existing_images(conference_code="qwerty"):
         response = requests.get(url)
         response.raise_for_status()
         data = response.json()
-        return data.get('images', [])
+        # return data.get('images', [])
+        return data
     except requests.exceptions.RequestException:
         return None
 

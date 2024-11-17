@@ -54,7 +54,7 @@ def view_existing_mentors(conference_code="qwerty"):
         response.raise_for_status()
         data = response.json()
         # Extract mentors from the conferenceMentors key
-        return data.get('conferenceMentors', [])
+        return data
     except requests.exceptions.RequestException:
         return None
 
