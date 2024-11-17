@@ -89,6 +89,7 @@ def show_login_page():
                 st.error("Please fill in all fields")
             else:
                 success, user_data = login(conference_code, password)
+                print("user data: ", user_data)
                 if success:
                     st.session_state.logged_in = True
                     st.session_state.current_user = user_data

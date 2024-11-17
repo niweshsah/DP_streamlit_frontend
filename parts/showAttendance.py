@@ -29,11 +29,14 @@ def main_show_attendance():
     st.title("Attendees Management")
 
     # Input field for conference code
-    conference_code = st.text_input("Enter Conference Code:", placeholder="e.g., TC2024")
+    # conference_code = st.text_input("Enter Conference Code:", placeholder="e.g., TC2024")
+    
+    conference_code = st.session_state.get('current_user', 'Guest')
+    print(f"Hello showattendance, {conference_code}!")
 
     if conference_code:
         # Fetch attendeesFalse and attendeesTrue from respective endpoints
-        st.write("Fetching attendees data...")
+        # st.write("Fetching attendees data...")
         false_count, attendees_false = fetch_attendees(ATTENDEES_FALSE_URL, conference_code)
         true_count, attendees_true = fetch_attendees(ATTENDEES_TRUE_URL, conference_code)
 
