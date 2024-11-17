@@ -9,11 +9,7 @@
 
 # def main_home():
 #     # Page config must be the first Streamlit command
-#     # st.set_page_config(
-#     #     page_title="Dynamic Single Page App",
-#     #     layout="wide",
-#     #     initial_sidebar_state="collapsed"
-#     # )
+#     
 
 #     # Hide the default menu and footer
 #     hide_menu = """
@@ -197,7 +193,8 @@ from parts.events import main_event  # Assuming this module exists
 from parts.mentors import main_mentors  # Assuming this module exists
 from parts.food import main_food  # Assuming this module exists
 from parts.sliding_images import main_sliding_images  # Assuming this module exists
-
+from parts.about import main_about  # Assuming this module exists
+from parts.helpline import main_helpline  # Assuming this module exists
 
 def main_home():
     # Page config must be the first Streamlit command
@@ -247,14 +244,22 @@ def main_home():
     with col2:
         if st.button("View attendance", key="view_attendance", use_container_width=True):
             st.session_state.current_page = 'view_attendance'
+            
         if st.button("SlidingImage", key="SlidingImage", use_container_width=True):
             st.session_state.current_page = 'SlidingImage'
+            
+        if st.button("Helplines", key="Helpline", use_container_width=True):
+            st.session_state.current_page = 'Helpline'
 
     with col3:
         if st.button("About", key="about", use_container_width=True):
             st.session_state.current_page = 'about'
+            
         if st.button("Event Schedule", key="event_schedule", use_container_width=True):
             st.session_state.current_page = 'event_schedule'
+            
+        if st.button("Food", key="food", use_container_width=True):
+            st.session_state.current_page = 'food'
 
     # Add a divider
     st.divider()
@@ -281,6 +286,15 @@ def main_home():
 
     elif st.session_state.current_page == 'event_schedule':
         main_event()
+        
+    elif st.session_state.current_page == 'about':
+        main_about()
+        
+    elif st.session_state.current_page == 'Helpline':
+        main_helpline()
+        
+    elif st.session_state.current_page == 'food':
+        main_food()
 
     # Add some spacing at the bottom
     st.markdown("<br><br>", unsafe_allow_html=True)

@@ -47,10 +47,8 @@ def view_existing_images(conference_code="qwerty"):
     
     try:
         response = requests.get(url)
-        # print("response: ", response)
         response.raise_for_status()
         data = response.json()
-        # print("data: ", data)
         return data
     except requests.exceptions.RequestException:
         return None
@@ -74,25 +72,73 @@ def main_sponsor():
     conference_code = st.session_state.get('current_user', 'Guest')
     print(f"Hello, {conference_code}!")
 
-    
     st.markdown("""
         <style>
         .main_sponsor { padding: 2rem; }
         .stButton button { width: 100%; }
-        .image-card { padding: 1rem; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 1rem; }
+        .image-card { 
+            padding: 1rem; 
+            border: 1px solid #ddd; 
+            border-radius: 10px; 
+            margin-bottom: 1rem; 
+            background-color: #f9f9f9; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .image-card:hover { 
+            background-color: #f1f1f1; 
+        }
+        .stTextInput, .stTextArea {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        .stButton {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .stButton:hover {
+            background-color: #45a049;
+        }
+        .stSuccess {
+            color: #4CAF50;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .stError {
+            color: #f44336;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .stInfo {
+            color: #2196F3;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .tab-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
         </style>
     """, unsafe_allow_html=True)
     
     st.title("Sponsor Management System")
-    
+
     tab1, tab2 = st.tabs(["Upload New Image", "View Existing Images"])
     
     with tab1:
-        st.header("Upload New Image")
+        st.markdown("<div class='tab-title'>Upload New Image</div>", unsafe_allow_html=True)
         
         with st.form("image_upload_form"):
-            name = st.text_input("Image Name")
-            photo_file = st.file_uploader("Upload Image", type=['jpg', 'jpeg', 'png'])
+            name = st.text_input("Sponsor Name")
+            photo_file = st.file_uploader("Upload Sponsor Logo", type=['jpg', 'jpeg', 'png'])
             
             if photo_file:
                 col1, col2 = st.columns([1, 2])
@@ -103,11 +149,11 @@ def main_sponsor():
             
             if submit_button:
                 if not name or not photo_file:
-                    st.error("Please provide an sponsor name and upload a photo.")
+                    st.error("Please provide a sponsor name and upload a photo.")
                 else:
                     with st.spinner("Uploading image..."):
                         photo_base64 = convert_image_to_base64(photo_file)
-                        success, message = upload_image(name, photo_base64,conference_code=conference_code)
+                        success, message = upload_image(name, photo_base64, conference_code=conference_code)
                         
                         if success:
                             st.success(message)
@@ -116,7 +162,7 @@ def main_sponsor():
                             st.error(message)
     
     with tab2:
-        st.header("Existing Images")
+        st.markdown("<div class='tab-title'>Existing Images</div>", unsafe_allow_html=True)
         
         if st.button("Refresh List"):
             st.rerun()
@@ -156,7 +202,7 @@ def main_sponsor():
                             # Delete button
                         if st.button("Delete", key=f"delete_{idx}"):
                             with st.spinner("Deleting image..."):
-                                success, message = delete_image(image.get('name'),conference_code=conference_code)
+                                success, message = delete_image(image.get('name'), conference_code=conference_code)
                                 
                                 if success:
                                     st.success(message)
@@ -165,15 +211,6 @@ def main_sponsor():
                                     st.error(message)
                         
                         st.markdown("</div>", unsafe_allow_html=True)
-            
-            # if st.button("Export Images Data"):
-            #     export_data = json.dumps(images, indent=2)
-            #     st.download_button(
-            #         label="Download JSON",
-            #         data=export_data,
-            #         file_name="images_data.json",
-            #         mime="application/json"
-            #     )
 
 if __name__ == "__main__":
     main_sponsor()

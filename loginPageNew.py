@@ -6,7 +6,7 @@ from home import main_home
 
 
 # Configure page settings
-st.set_page_config(page_title="Conference Login System", layout="centered")
+# st.set_page_config(page_title="Conference Login System", layout="centered")
 
 # Initialize session state variables
 if 'logged_in' not in st.session_state:

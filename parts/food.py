@@ -13,7 +13,6 @@ def main_food():
         """Helper function to check if conference exists"""
         try:
             response = requests.get(f"{API_BASE_URL}/{conference_code}/checkConferenceCode")
-            # print("status code: ",response.status_code )
             return response.status_code == 200, response.json() if response.status_code == 200 else None
         except requests.exceptions.RequestException:
             return False, None
@@ -23,16 +22,13 @@ def main_food():
         try:
             response = requests.get(f"{API_BASE_URL}/{conference_code}/eventCard/food")
             if response.status_code == 200:
-                foods = response.json().get('data', [])
+                foods = response.json()
                 return len(foods) > 0, foods
             return False, []
         except requests.exceptions.RequestException:
             return False, []
 
     # Conference Code input with validation
-    # conference_code = st.text_input("Conference Code", placeholder="Enter conference code")
-    
-    
     conference_code = st.session_state.get('current_user', 'Guest')
     print(f"Hello, {conference_code}!")
 
@@ -40,7 +36,7 @@ def main_food():
         conference_exists, conference_data = check_conference_exists(conference_code)
         if not conference_exists:
             st.error("❌ Conference not found! Please check the conference code.")
-            st.info("💡 Make sure you have entered the correct conference code")
+            st.info("💡 Make sure you have entered the correct conference code.")
             return
         else:
             st.success(f"✅ Connected to conference: {conference_data.get('name', conference_code)}")
@@ -51,7 +47,7 @@ def main_food():
         return
 
     # Select operation
-    operation = st.radio("Choose an operation:", ["Add Food Item", "Delete Food Item", "View Food Items"])
+    operation = st.radio("Choose an operation:", ["📅 Add Food Item", "🗑️ Delete Food Item", "🍽️ View Food Items"])
 
     def time_input_widget(label):
         st.subheader(label)
@@ -77,7 +73,7 @@ def main_food():
         return datetime.combine(date, datetime.min.time().replace(hour=hour, minute=minute))
 
     # Add Food Item Operation
-    if operation == "Add Food Item":
+    if operation == "📅 Add Food Item":
         st.header("Add New Food Item")
 
         # Show conference dates if available
@@ -97,9 +93,9 @@ def main_food():
         # Show current food count
         has_foods, current_foods = check_food_items(conference_code)
         if has_foods:
-            st.info(f"Currently {len(current_foods)} food items in the conference")
+            st.info(f"Currently {len(current_foods)} food items in the conference.")
         else:
-            st.info("No food items yet in this conference")
+            st.info("No food items yet in this conference.")
 
         # Validation and submission
         if st.button("Submit Food Item"):
@@ -140,15 +136,15 @@ def main_food():
                 st.error("❌ Please enter at least the food name!")
 
     # Delete Food Item Operation
-    elif operation == "Delete Food Item":
+    elif operation == "🗑️ Delete Food Item":
         st.header("Delete Food Item")
 
         # Check for existing food items
         has_foods, foods = check_food_items(conference_code)
         
         if not has_foods:
-            st.warning("⚠️ No food items available in this conference")
-            st.info("💡 Add some food items first using the 'Add Food Item' option")
+            st.warning("⚠️ No food items available in this conference.")
+            st.info("💡 Add some food items first using the 'Add Food Item' option.")
             return
 
         # Show delete interface only if there are foods
@@ -170,17 +166,17 @@ def main_food():
                 st.error(f"❌ Error connecting to server: {str(e)}")
 
     # View Food Items
-    elif operation == "View Food Items":
+    elif operation == "🍽️ View Food Items":
         st.header("Current Food Items")
         
         try:
             response = requests.get(f"{API_BASE_URL}/{conference_code}/eventCard/food")
             if response.status_code == 200:
-                foods = response.json().get('data', [])
+                foods = response.json()
                 
                 if not foods:
-                    st.warning("⚠️ No food items found in this conference")
-                    st.info("💡 You can add food items using the 'Add Food Item' option")
+                    st.warning("⚠️ No food items found in this conference.")
+                    st.info("💡 You can add food items using the 'Add Food Item' option.")
                     
                     # Display a helpful message about what can be added
                     with st.expander("ℹ️ What can I add?"):
@@ -192,7 +188,7 @@ def main_food():
                         - Expiry time (when the food should be consumed by)
                         """)
                 else:
-                    st.success(f"✅ Found {len(foods)} food items")
+                    st.success(f"✅ Found {len(foods)} food items.")
                     for food in foods:
                         with st.expander(f"🍽️ {food['name']}"):
                             st.write(f"📝 Description: {food.get('description', 'No description provided')}")
