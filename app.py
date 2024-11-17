@@ -6,7 +6,7 @@ from parts.sidebar import render_sidebar
 
 # Load custom CSS file to style the app
 #page config 
-st.set_page_config(page_title="Crop Monitoring",page_icon="🛰️",initial_sidebar_state="expanded")
+st.set_page_config(page_title="GatherHub Admin",page_icon="🛰️",initial_sidebar_state="expanded")
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)

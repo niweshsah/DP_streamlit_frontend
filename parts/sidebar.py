@@ -1,6 +1,8 @@
 import streamlit as st
-from parts.Image import main_Image
+# from parts.Image import main_Image
 from parts.mentors import mentor
+from parts.sponsors import sponsor
+from parts.sliding_images import sliding_Image
 # from parts.sponsors import sponsors
 
 def render_sidebar():
@@ -45,16 +47,17 @@ def render_sidebar():
     page = st.sidebar.radio(
         "Choose a section:",
         # ["Introduction", "Irrigation Monitoring", "NDVI Map", "Soil Moisture","Split Map"]
-        ["Image","mentor"]
+        ["Sliding Image","Mentors","Sponsors"]
     )
 
     # Render the appropriate page based on selection
-    if page == "Image":
-        main_Image()
-    elif page == "mentor":
+    if page == "Sliding Image":
+        sliding_Image()
+        pass
+    elif page == "Mentors":
         mentor()
-    # elif page == "Sponsors":
-    #     sponsors()
+    elif page == "Sponsors":
+        sponsor()
 
 
     return page
