@@ -7,7 +7,7 @@ def main_food():
     # st.set_page_config(page_title="Conference Food Management", layout="centered")
 
     # Define API URL
-    API_BASE_URL = "http://localhost:27017/user/conference"
+    API_BASE_URL = "http://gatherhub-r7yr.onrender.com/user/conference"
 
     def check_conference_exists(conference_code):
         """Helper function to check if conference exists"""

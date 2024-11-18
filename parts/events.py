@@ -8,7 +8,7 @@ def main_event():
     # st.set_page_config(page_title="Conference Event Manager", layout="centered")
 
     # Define API URL
-    API_BASE_URL = "http://localhost:27017/user/conference/"
+    API_BASE_URL = "http://gatherhub-r7yr.onrender.com/user/conference/"
 
     # Select POST or DELETE operation
     operation = st.radio("Choose an operation:", ["📅 Add Events", "🗑️ Delete Events"])

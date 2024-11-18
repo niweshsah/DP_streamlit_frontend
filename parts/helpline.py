@@ -5,7 +5,7 @@ from datetime import datetime
 import re
 
 # Configuration
-API_BASE_URL = "http://localhost:27017/user/"
+API_BASE_URL = "http://gatherhub-r7yr.onrender.com/user/"
 
 def format_phone_number(number):
     """Format phone number to (XXX) XXX-XXXX or +XX XXXXX XXXXX format"""

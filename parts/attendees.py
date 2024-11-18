@@ -38,8 +38,8 @@ def main_add_attendee():
     conference_code = st.session_state.get('current_user', 'Guest')
     print(f"Hello, {conference_code}!")
     
-    fetch_url = "http://localhost:27017/user/"
-    post_url = f"http://localhost:27017/user/conference/{conference_code}/eventCard/registerAttendees"
+    fetch_url = "https://gatherhub-r7yr.onrender.com/user/"
+    post_url = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/registerAttendees"
    
 
     # Fetch button with loading state and custom button styling
@@ -86,7 +86,7 @@ def main_add_attendee():
                     # Show spinner while waiting for the response
                     with st.spinner("Sending emails..."):
                         # Make a GET request to the external API
-                        response = requests.get('http://localhost:27017/user/conference/qwerty/eventCard/email/sendEmails')
+                        response = requests.get(f'http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/email/sendEmails')
 
                         # Wait for the response and handle it
                         if response.status_code == 200:

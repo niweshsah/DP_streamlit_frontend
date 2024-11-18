@@ -18,8 +18,8 @@ if 'current_user' not in st.session_state:
 
 
 # API endpoints
-# BASE_URL = "https://gatherhub-r7yr.onrender.com/user/conference/"  # Replace with your actual API base URL
-BASE_URL = "http://localhost:27017/user/conference/"  # Replace with your actual API base URL
+BASE_URL = "https://gatherhub-r7yr.onrender.com/user/conference/"  # Replace with your actual API base URL
+# BASE_URL = "http://localhost:27017/user/conference/"  # Replace with your actual API base URL
 ENDPOINTS = {
     'login': f"{BASE_URL}/login",
     'create_account': f"{BASE_URL}/createNewConference",

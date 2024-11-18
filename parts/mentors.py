@@ -29,7 +29,7 @@ def convert_image_to_base64(image_file):
 
 def upload_mentor(name, profession, photo_base64, conference_code="qwerty"):
     """Upload mentor data to the API"""
-    url = f"http://localhost:27017/user/conference/{conference_code}/eventCard/addNewMentor"
+    url = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/addNewMentor"
     
     payload = {
         "name": name,
@@ -47,7 +47,7 @@ def upload_mentor(name, profession, photo_base64, conference_code="qwerty"):
 
 def view_existing_mentors(conference_code="qwerty"):
     """Fetch existing mentors from the API"""
-    url = f"http://localhost:27017/user/conference/{conference_code}/eventCard/mentors"
+    url = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/mentors"
     
     try:
         response = requests.get(url)
@@ -59,7 +59,7 @@ def view_existing_mentors(conference_code="qwerty"):
 
 def delete_image(name, conference_code="qwerty"):
     """Delete an image from the API by name"""
-    url = f"http://localhost:27017/user/conference/{conference_code}/eventCard/deleteMentor"
+    url = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/deleteMentor"
     
     payload = {"name": name}
     

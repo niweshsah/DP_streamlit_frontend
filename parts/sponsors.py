@@ -25,7 +25,7 @@ def convert_image_to_base64(image_file):
 
 def upload_image(name, photo_base64, conference_code="qwerty"):
     """Upload image data to the API"""
-    url = f"http://localhost:27017/user/conference/{conference_code}/eventCard/addNewSponsors"
+    url = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/addNewSponsors"
     
     payload = {
         "name": name,
@@ -43,7 +43,7 @@ def upload_image(name, photo_base64, conference_code="qwerty"):
 def view_existing_images(conference_code="qwerty"):
     """Fetch existing images from the API"""
     
-    url = f"http://localhost:27017/user/conference/{conference_code}/eventCard/sponsors"
+    url = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/sponsors"
     
     try:
         response = requests.get(url)
@@ -55,7 +55,7 @@ def view_existing_images(conference_code="qwerty"):
 
 def delete_image(name, conference_code="qwerty"):
     """Delete an image from the API by name"""
-    url = f"http://localhost:27017/user/conference/{conference_code}/eventCard/deleteSponsor"
+    url = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/deleteSponsor"
     
     payload = {"name": name}
     

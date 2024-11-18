@@ -8,7 +8,7 @@ import json
 #     layout="wide"
 # )
 
-# Custom CSS
+# Custom CSSL
 def add_custom_css():
     return """
     <style>
@@ -103,7 +103,7 @@ def load_current_about(conference_code):
     """Load the current about section data"""
     try:
         # Replace with your actual API endpoint
-        response = requests.get(f"http://localhost:27017/user/conference/{conference_code}/eventCard/about")
+        response = requests.get(f"https://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/about")
         if response.status_code == 200:
             data = response.json()
             return data.get('about', {'title': '', 'description': ''})
@@ -125,7 +125,7 @@ def update_about_section(conference_code, title, description):
         }
         
         response = requests.post(
-            f"http://localhost:27017/user/conference/{conference_code}/eventCard/addAbout",
+            f"https://gatherhub-r7yr.onrender.com/user//conference/{conference_code}/eventCard/addAbout",
             headers=headers,
             json=payload
         )

@@ -6,8 +6,8 @@
 
 
 # # Backend API URLs
-# ATTENDEES_FALSE_URL = f"http://localhost:27017/user/conference/{conference_code}/eventCard/attendees-false"  # Replace with your actual API URL
-# ATTENDEES_TRUE_URL = f"http://localhost:27017/user/conference/{conference_code}/eventCard/attendees-true"  # Replace with your actual API URL
+# ATTENDEES_FALSE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/attendees-false"  # Replace with your actual API URL
+# ATTENDEES_TRUE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/attendees-true"  # Replace with your actual API URL
 
 # def fetch_attendees(url, conference_code):
 #     """Fetch attendees list and count from the given API URL."""
@@ -230,8 +230,8 @@ def main_show_attendance():
                 st.cache_data.clear()
 
         # Backend API URLs
-        ATTENDEES_FALSE_URL = f"http://localhost:27017/user/conference/{conference_code}/eventCard/attendees-false"
-        ATTENDEES_TRUE_URL = f"http://localhost:27017/user/conference/{conference_code}/eventCard/attendees-true"
+        ATTENDEES_FALSE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/attendees-false"
+        ATTENDEES_TRUE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/attendees-true"
 
         # Fetch data
         false_count, attendees_false = fetch_attendees(ATTENDEES_FALSE_URL, conference_code)
