@@ -58,7 +58,7 @@ def add_helpline(conference_code, name, number):
             f"{API_BASE_URL}/conference/{conference_code}/eventCard/addNewHelpline",
             json={"name": name, "number": int(clean_number)}
         )
-        if response.status_code == 201:
+        if response.status_code == 200:
             st.success("✅ Helpline added successfully!")
             return True
         else:
