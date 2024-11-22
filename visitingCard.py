@@ -982,6 +982,7 @@ if not user_id:
 
 user_data_url = f"https://gatherhub-r7yr.onrender.com/user/businessCard/getInfo/{user_id}"
 
+
 # Fetch user data with loading state
 if user_id:
     with st.spinner("Loading business card..."):
