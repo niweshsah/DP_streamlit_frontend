@@ -183,14 +183,14 @@
 #         return None
 
 # if st.query_params.get("userId"):
-#     user_id = st.query_params["userId"]
-#     # st.write(f"User ID: {user_id}")
+#     email = st.query_params["userId"]
+#     # st.write(f"User ID: {email}")
 # else:
-#     user_id = st.text_input("Enter User ID")
+#     email = st.text_input("Enter User ID")
 
 
 # # URL to fetch user data
-# user_data_url = f"http://localhost:27017/user/businessCard/getInfo/{user_id}"
+# user_data_url = f"http://localhost:27017/user/businessCard/getInfo/{email}"
 
 
 # # Fetch user data
@@ -563,12 +563,12 @@
 #     return ''.join(word[0].upper() for word in name.split() if word)
 
 # if st.query_params.get("userId"):
-#     user_id = st.query_params["userId"]
+#     email = st.query_params["userId"]
 # else:
-#     user_id = st.text_input("Enter User ID")
+#     email = st.text_input("Enter User ID")
 
 # # URL to fetch user data
-# user_data_url = f"http://localhost:27017/user/businessCard/getInfo/{user_id}"
+# user_data_url = f"http://localhost:27017/user/businessCard/getInfo/{email}"
 
 # # Fetch user data
 # user_data = fetch_user_data(user_data_url)
@@ -968,30 +968,31 @@ def get_initials(name):
     return ''.join(word[0].upper() for word in name.split() if word)
 
 # Input userId with improved UI
-user_id = st.query_params.get("userId")
-if not user_id:
+email = st.query_params.get("email")
+conference_code = st.query_params.get("confcode")
+if not email:
     st.markdown("""
         <div style='text-align: center; padding: 2rem;'>
             <h1 style='color: #6366f1; font-size: 2rem; margin-bottom: 1rem;'>🪪 Digital Business Card</h1>
         </div>
     """, unsafe_allow_html=True)
-    user_id = st.text_input("Enter User ID", placeholder="Type your user ID here...")
+    email = st.text_input("Enter User ID", placeholder="Type your user ID here...")
 
 # URL to fetch user data
-# user_data_url = f"http://localhost:27017/user/businessCard/getInfo/{user_id}"
+# user_data_url = f"http://localhost:27017/user/businessCard/getInfo/{email}"
 
-user_data_url = f"https://gatherhub-r7yr.onrender.com/user/businessCard/getInfo/{user_id}"
+user_data_url = f"https://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/getInfo/{email}"
 
 
 # Fetch user data with loading state
-if user_id:
+if email:
     with st.spinner("Loading business card..."):
         user_data = fetch_user_data(user_data_url)
 else:
     user_data = None
 
 # If user data is unavailable, show enhanced error message
-if not user_data and user_id:
+if not user_data and email:
     st.error("👻 User data not found! Please check the User ID and try again.")
     st.stop()
 
