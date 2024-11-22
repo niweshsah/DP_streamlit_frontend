@@ -123,6 +123,8 @@ def main_home2():
         main_attendance_accepted()
     elif st.session_state.current_page == 'event_attendance':
         main_event_attendance()
+        
+        
     # Add some spacing at the bottom
     st.markdown("<br><br>", unsafe_allow_html=True)
 

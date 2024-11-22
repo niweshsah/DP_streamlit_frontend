@@ -92,6 +92,7 @@ def main_event():
                 hour, minute = clock_input("Event Time")
                 event_time = format_time_12hr(hour, minute)
                 event_venue = st.text_input("Event Venue", placeholder="Enter event venue")
+                event_code = st.text_input("Event Code", placeholder="Enter event code")
 
                 submit_button = st.form_submit_button("Submit Event")
 
@@ -101,7 +102,8 @@ def main_event():
                             "date": date,
                             "title": event_title,
                             "time": event_time,
-                            "venue": event_venue
+                            "venue": event_venue,
+                            "eventCode" : event_code
                         }
 
                         response = requests.post(
