@@ -215,24 +215,36 @@ with st.container():
 
 
                 # Modified save contact functionality
-        if st.button("📱 Save to Phone", key="save_contact"):
-            # Generate vCard data with proper formatting and all available fields
-            vcard = f"""BEGIN:VCARD
-            VERSION:2.1
-            N:{user_data['name']};;;;
-            FN:{user_data['name']}
-            TEL;TYPE=cell:{user_data['phone']}
-            END:VCARD"""
-
-            # Create download link with proper MIME type
-            b64_vcard = base64.b64encode(vcard.encode()).decode()
+        if st.button("📱 Save to Android Phone", key="save_contact"):
+    # Generate Android-compatible vCard
+    # Note: Using VERSION:2.1 for better Android compatibility
+            vcard = [
+                "BEGIN:VCARD",
+                "VERSION:2.1",  # Changed to 2.1 for better Android support
+                f"N;CHARSET=UTF-8:{user_data['name'].split()[-1]};{' '.join(user_data['name'].split()[:-1])}",
+                f"FN;CHARSET=UTF-8:{user_data['name']}",
+                f"ORG;CHARSET=UTF-8:{user_data['company']}",
+                f"TITLE;CHARSET=UTF-8:{user_data['title']}",
+                f"TEL;CELL:{user_data['phone'].replace(' ', '').replace('+', '')}",  # Remove spaces and + from phone
+                f"EMAIL;INTERNET:{user_data['email']}",
+                f"URL:{user_data['website']}",
+                f"ADR;HOME;CHARSET=UTF-8:;;{user_data['location']}",
+                f"X-GITHUB:{user_data['github']}",
+                f"X-LINKEDIN:{user_data['linkedin']}",
+                "END:VCARD"
+            ]
             
-            # Create a download link that works better with mobile devices
+            # Join with proper line endings (\r\n for vCard spec)
+            vcard_text = "\r\n".join(vcard) + "\r\n"
+            
+            # Create download link with specific Android mime-type
+            b64_vcard = base64.b64encode(vcard_text.encode('utf-8')).decode()
+            
             st.markdown(
                 f'''
                 <div style="text-align: center; margin-top: 20px;">
-                    <a href="data:text/vcard;base64,{b64_vcard}" 
-                    download="{user_data['name'].replace(' ', '_')}.vcf"
+                    <a href="data:text/x-vcard;charset=utf-8;base64,{b64_vcard}" 
+                    download="contact.vcf"
                     style="text-decoration: none;">
                         <button style="
                             background-color: #4CAF50;
@@ -245,12 +257,41 @@ with st.container():
                             display: inline-flex;
                             align-items: center;
                             gap: 8px;">
-                            <span>📥</span> Download Contact File
+                            <span>📥</span> Download Contact (Android)
                         </button>
                     </a>
                     <p style="margin-top: 10px; color: #666; font-size: 14px;">
-                        Click to save contact to your phone
+                        Android Instructions:<br>
+                        1. Click the button above<br>
+                        2. Open the downloaded file (usually in Downloads folder)<br>
+                        3. Select "Contacts" app when prompted<br>
+                        4. Confirm adding the contact
                     </p>
+                </div>
+                ''',
+                unsafe_allow_html=True
+            )
+
+            # Add a direct "Share to Contacts" intent for Android
+            st.markdown(
+                f'''
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="intent:#Intent;action=android.intent.action.VIEW;type=text/x-vcard;S.vcard={b64_vcard};end" 
+                    style="text-decoration: none;">
+                        <button style="
+                            background-color: #2196F3;
+                            color: white;
+                            padding: 12px 24px;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            font-size: 16px;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 8px;">
+                            <span>📲</span> Open Directly in Contacts
+                        </button>
+                    </a>
                 </div>
                 ''',
                 unsafe_allow_html=True
