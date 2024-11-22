@@ -701,8 +701,9 @@ st.set_page_config(
 )
 
 # Extract email and conference code from the URL
-query_params = st.get_query_params()
-
+# query_params = st.get_query_params()
+# query_params = st.experimental_get_query_params()
+query_params = st.query_params
 # Get the 'email' and 'conference_code' parameters from the query string
 email = query_params.get('email', [''])[0]  # Default to an empty string if not provided
 conference_code = query_params.get('conference_code', ['DP2024'])[0]  # Default to 'DP2024'
