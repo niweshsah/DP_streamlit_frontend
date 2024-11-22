@@ -75,7 +75,7 @@ st.set_page_config(
 
 # Extract email and conference code from the URL
 query_params = st.query_params
-email = query_params.get('email', [''])  # Default to an empty string if not provided
+email = query_params.get('email', '')  # Default to an empty string if not provided
 conference_code = query_params.get('conference_code', 'DP2024')  # Default to 'DP2024'
 
 # Header section
