@@ -214,20 +214,51 @@ with st.container():
 """, unsafe_allow_html=True)
 
 
-        if st.button("💾 Save Contact", key="download_button"):
-            # Generate vCard data
+                # Modified save contact functionality
+        if st.button("📱 Save to Phone", key="save_contact"):
+            # Generate vCard data with proper formatting and all available fields
             vcard = f"""BEGIN:VCARD
         VERSION:3.0
+        N:{user_data['name']};;;;
         FN:{user_data['name']}
         TITLE:{user_data['title']}
         ORG:{user_data['company']}
-        EMAIL:{user_data['email']}
-        TEL:{user_data['phone']}
+        EMAIL;type=INTERNET;type=WORK:{user_data['email']}
+        TEL;type=CELL:{user_data['phone']}
         URL:{user_data['website']}
-        ADR;TYPE=WORK:{user_data['location']}
+        ADR;type=WORK:;;{user_data['location']};;;
+        X-SOCIALPROFILE;type=github:https://github.com/{user_data['github']}
+        X-SOCIALPROFILE;type=linkedin:https://www.linkedin.com/in/{user_data['linkedin']}
         END:VCARD"""
 
-            # Base64 encode vCard to create a downloadable link
+            # Create download link with proper MIME type
             b64_vcard = base64.b64encode(vcard.encode()).decode()
-            href = f'<a href="data:text/vcard;base64,{b64_vcard}" download="{user_data["name"]}.vcf">📥 Download Contact</a>'
-            st.markdown(href, unsafe_allow_html=True)
+            
+            # Create a download link that works better with mobile devices
+            st.markdown(
+                f'''
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="data:text/vcard;base64,{b64_vcard}" 
+                    download="{user_data['name'].replace(' ', '_')}.vcf"
+                    style="text-decoration: none;">
+                        <button style="
+                            background-color: #4CAF50;
+                            color: white;
+                            padding: 12px 24px;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            font-size: 16px;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 8px;">
+                            <span>📥</span> Download Contact File
+                        </button>
+                    </a>
+                    <p style="margin-top: 10px; color: #666; font-size: 14px;">
+                        Click to save contact to your phone
+                    </p>
+                </div>
+                ''',
+                unsafe_allow_html=True
+            )
