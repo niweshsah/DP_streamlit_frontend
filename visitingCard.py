@@ -14,32 +14,57 @@ st.set_page_config(
 # Custom CSS
 st.markdown("""
 <style>
-    .css-1v0mbdj.etr89bj1 {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        text-align: center;
+    /* Main Container */
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     
+    /* Profile Image */
     .profile-img {
         border-radius: 50%;
         border: 4px solid white;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
     }
     
-    .social-links {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        margin-top: 20px;
+    /* Name and Title */
+    .name-header {
+        font-size: 2.5em;
+        font-weight: bold;
+        margin-bottom: 0;
+        color: #1f2937;
     }
     
+    .title-text {
+        font-size: 1.2em;
+        margin-top: 5px;
+        color: #4b5563;
+    }
+    
+    .company-text {
+        font-size: 1.1em;
+        margin-top: 5px;
+        color: #6b7280;
+    }
+    
+    /* Contact Information */
     .contact-item {
         background-color: #f8f9fa;
         padding: 10px 20px;
         border-radius: 10px;
         margin: 10px 0;
         transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
     
     .contact-item:hover {
@@ -47,31 +72,34 @@ st.markdown("""
         transform: translateX(5px);
     }
     
-    .name-header {
-        color: #1f2937;
-        font-size: 2.5em;
-        font-weight: bold;
-        margin-bottom: 0;
+    /* Social Links */
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
     }
     
-    .title-text {
-        color: #4b5563;
-        font-size: 1.2em;
-        margin-top: 5px;
+    /* Buttons */
+    .button {
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
     }
     
-    .company-text {
+    .button:hover {
+        background-color: #3e8e41;
+    }
+    
+    /* Footer */
+    .footer {
+        font-size: 0.8em;
         color: #6b7280;
-        font-size: 1.1em;
-        margin-top: 5px;
-    }
-    
-    .badge {
-        background-color: #e5e7eb;
-        color: #374151;
-        padding: 5px 15px;
-        border-radius: 15px;
-        font-size: 0.9em;
+        text-align: center;
+        margin-top: 20px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -120,8 +148,8 @@ with st.container():
         # Name and Title
         st.markdown(f"""
             <h1 class="name-header">{user_data['name']}</h1>
-            <div class="badge">{user_data['title']}</div>
-            <p class="company-text">🏢 {user_data['company']}</p>
+            <div class="title-text">{user_data['title']}</div>
+            <div class="company-text">{user_data['company']}</div>
         """, unsafe_allow_html=True)
 
         # Contact Information
@@ -168,10 +196,10 @@ with st.container():
             </div>
         """, unsafe_allow_html=True)
 
-# Add some interactivity
-if st.button("💾 Save Contact"):
-    # Generate vCard data
-    vcard = f"""BEGIN:VCARD
+        # Download vCard Button
+        if st.button("💾 Save Contact", key="download_button", class_name="button"):
+            # Generate vCard data
+            vcard = f"""BEGIN:VCARD
 VERSION:3.0
 FN:{user_data['name']}
 TITLE:{user_data['title']}
@@ -181,16 +209,16 @@ TEL:{user_data['phone']}
 URL:{user_data['website']}
 ADR;TYPE=WORK:{user_data['location']}
 END:VCARD"""
-    
-    # Create download button for vCard
-    b64_vcard = base64.b64encode(vcard.encode()).decode()
-    href = f'<a href="data:text/vcard;base64,{b64_vcard}" download="contact.vcf">📥 Download vCard</a>'
-    st.markdown(href, unsafe_allow_html=True)
+            
+            # Create download button for vCard
+            b64_vcard = base64.b64encode(vcard.encode()).decode()
+            href = f'<a href="data:text/vcard;base64,{b64_vcard}" download="contact.vcf">📥 Download vCard</a>'
+            st.markdown(href, unsafe_allow_html=True)
 
 # Footer
 st.markdown("---")
 st.markdown("""
-    <p style='text-align: center; color: #6b7280; font-size: 0.8em;'>
+    <p class="footer">
         Made with ❤️ using Streamlit
     </p>
 """, unsafe_allow_html=True)
