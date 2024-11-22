@@ -184,8 +184,12 @@ def generate_otp():
 # Function to send email
 def send_email(recipient_email, otp):
     sender_email = "gatherhubiitmandi@gmail.com"  # Replace with your email
-    sender_password = os.getenv("EMAIL_PASSWORD")  # Replace with your email password
-
+    # sender_password = os.getenv("EMAIL_PASSWORD")  # Replace with
+    
+    # your email password
+#
+    sender_password = st.secrets["credentials"]["EMAIL_PASSWORD"]
+  
     subject = "Your OTP for Business Card Submission"
     body = f"Your OTP is {otp}. It is valid for 5 minutes."
 
