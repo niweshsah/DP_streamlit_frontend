@@ -106,11 +106,11 @@ st.markdown("""
 
 # Mock user data (in a real application, this could come from a database or API)
 user_data = {
-    "name": "Niwesh Sah",
+    "name": "test Sah",
     "title": "Student",
     "company": "IIT Mandi",
     "email": "sahniwesh@gmail.com",
-    "phone": "+91 9451864348",
+    "phone": "+91 69696969",
     "website": "www.niweshsah.dev",
     "location": "San Francisco, CA",
     "github": "niweshsah",
