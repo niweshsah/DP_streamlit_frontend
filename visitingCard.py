@@ -1084,35 +1084,35 @@ if user_data:
 
             # Enhanced Download Button
              # Save Contact Button with enhanced styling
-        if st.button("📱 Save Contact", key="save_contact"):
-            vcard = [
-                "BEGIN:VCARD",
-                "VERSION:2.1",
-                f"N;CHARSET=UTF-8:{user_data['name'].split()[-1]};{' '.join(user_data['name'].split()[:-1])}",
-                f"FN;CHARSET=UTF-8:{user_data['name']}",
-                f"ORG;CHARSET=UTF-8:{user_data['organization']}",
-                f"TITLE;CHARSET=UTF-8:{user_data['designation']}",
-                f"TEL;CELL:{user_data.get('mobile', '').replace(' ', '').replace('+', '')}",
-                f"EMAIL;INTERNET:{user_data.get('email', '')}",
-                f"URL:{user_data.get('website', '')}",
-                f"ADR;HOME;CHARSET=UTF-8:;;{user_data.get('location', '')}",
-                "END:VCARD"
-            ]
-            
-            vcard_text = "\r\n".join(vcard) + "\r\n"
-            b64_vcard = base64.b64encode(vcard_text.encode('utf-8')).decode()
-            
-            st.markdown(f'''
-                <div style="text-align: center; margin-top: 2rem;">
-                    <a href="data:text/x-vcard;charset=utf-8;base64,{b64_vcard}" 
-                       download="contact.vcf"
-                       class="download-btn">
-                        📥 Download Contact
-                    </a>
-                    <p style="margin-top: 1.5rem; color: #666; font-size: 0.9rem;">
-                        1. Click to download<br>
-                        2. Open the file<br>
-                        3. Add to contacts
-                    </p>
-                </div>
-            ''', unsafe_allow_html=True)
+            if st.button("📱 Save Contact", key="save_contact"):
+                vcard = [
+                    "BEGIN:VCARD",
+                    "VERSION:2.1",
+                    f"N;CHARSET=UTF-8:{user_data['name'].split()[-1]};{' '.join(user_data['name'].split()[:-1])}",
+                    f"FN;CHARSET=UTF-8:{user_data['name']}",
+                    f"ORG;CHARSET=UTF-8:{user_data['organization']}",
+                    f"TITLE;CHARSET=UTF-8:{user_data['designation']}",
+                    f"TEL;CELL:{user_data.get('mobile', '').replace(' ', '').replace('+', '')}",
+                    f"EMAIL;INTERNET:{user_data.get('email', '')}",
+                    f"URL:{user_data.get('website', '')}",
+                    f"ADR;HOME;CHARSET=UTF-8:;;{user_data.get('location', '')}",
+                    "END:VCARD"
+                ]
+                
+                vcard_text = "\r\n".join(vcard) + "\r\n"
+                b64_vcard = base64.b64encode(vcard_text.encode('utf-8')).decode()
+                
+                st.markdown(f'''
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <a href="data:text/x-vcard;charset=utf-8;base64,{b64_vcard}" 
+                        download="contact.vcf"
+                        class="download-btn">
+                            📥 Download Contact
+                        </a>
+                        <p style="margin-top: 1.5rem; color: #666; font-size: 0.9rem;">
+                            1. Click to download<br>
+                            2. Open the file<br>
+                            3. Add to contacts
+                        </p>
+                    </div>
+                ''', unsafe_allow_html=True)

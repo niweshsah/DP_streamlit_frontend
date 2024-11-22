@@ -120,6 +120,7 @@ def main_home2():
     # Add some spacing at the bottom
     st.markdown("<br><br>", unsafe_allow_html=True)
 
+
 # Run the main function
 if __name__ == "__main__":
     main_home2()
