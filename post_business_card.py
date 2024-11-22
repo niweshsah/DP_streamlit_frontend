@@ -121,6 +121,7 @@ if st.button("Submit"):
             "about": about,
         }
         try:
+            print("data: ", data)
             response = requests.post(post_url, json=data)
             st.write(f"Response status code: {response.status_code}")  # Log the status code
             st.write(f"Response content: {response.text}")  # Log the raw response content
