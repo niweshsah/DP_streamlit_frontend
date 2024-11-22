@@ -654,7 +654,7 @@ def main():
                             else:
                                 st.warning(message)
                     else:
-                        st.error(f"❌ Submission failed. Please try again. Error: {response.text}")
+                        st.error(f"❌ Submission failed. Error: {response.text}")
                         
             except Exception as e:
                 st.error(f"❌ Error: {str(e)}")
