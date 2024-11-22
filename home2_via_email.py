@@ -12,6 +12,7 @@ from parts.about import main_about  # Assuming this module exists
 from parts.helpline import main_helpline  # Assuming this module exists
 from parts.attendeeAccepted import main_attendance_accepted  # Assuming this module exists
 from parts.add_attendee_csv import main_attendee_csv  # Assuming this module exists
+from parts.event_attendance import main_event_attendance  # Assuming this module exists
 
 def main_home2():
     # Page config must be the first Streamlit command
@@ -57,6 +58,10 @@ def main_home2():
             
         if st.button("Mentors", key="Mentors", use_container_width=True):
             st.session_state.current_page = 'Mentors'
+        
+        if st.button("Event Attendance", key="event_attendance", use_container_width=True):
+            st.session_state.current_page = 'event_attendance'
+        
 
     with col2:
         if st.button("View attendance", key="view_attendance", use_container_width=True):
@@ -116,7 +121,8 @@ def main_home2():
         main_food()
     elif st.session_state.current_page == 'attendance_accepted':
         main_attendance_accepted()
-
+    elif st.session_state.current_page == 'event_attendance':
+        main_event_attendance()
     # Add some spacing at the bottom
     st.markdown("<br><br>", unsafe_allow_html=True)
 
