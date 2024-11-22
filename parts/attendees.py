@@ -13,6 +13,7 @@ def fetch_attendees(url: str) -> List[Dict]:
         st.error(f"Error fetching attendees: {str(e)}")
         return []
 
+
 def post_selected_attendees(url: str, selected_attendees: List[Dict]) -> bool:
     """Post selected attendees to the API"""
     try:
@@ -42,6 +43,7 @@ def main_add_attendee():
     post_url = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/registerAttendees"
    
 
+
     # Fetch button with loading state and custom button styling
     st.markdown("<br>", unsafe_allow_html=True)
     if st.button("📥 Fetch Attendees", key="fetch_button"):
@@ -54,6 +56,8 @@ def main_add_attendee():
                 st.success("✅ Successfully fetched attendees!")
             else:
                 st.error("❌ No attendees data received")
+
+
 
     # Display attendees if they exist in session state
     if hasattr(st.session_state, 'attendees'):

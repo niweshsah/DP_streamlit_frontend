@@ -3,7 +3,7 @@ import requests
 import json
 from datetime import datetime
 from home import main_home
-
+from home2_via_email import main_home2
 
 # Configure page settings
 # st.set_page_config(page_title="Conference Login System", layout="centered")
@@ -113,6 +113,9 @@ def show_signup_page():
         time2 = time.isoformat()  # Converts to YYYY-MM-DD format
         password = st.text_input("Password", type="password")
         confirm_password = st.text_input("Confirm Password", type="password")
+        options = ["Option 1", "Option 2", "Option 3"]
+        selected_option = st.selectbox("Choose an option:", options)
+        
         
         submit_button = st.form_submit_button("Create Account")
         
@@ -153,7 +156,8 @@ def show_logged_in_page():
     """Display logged in user's dashboard"""
     # st.title("Welcome to Your Dashboard")
     # st.write(f"Welcome back!")
-    main_home()
+    # main_home()
+    main_home2()
     
     
    

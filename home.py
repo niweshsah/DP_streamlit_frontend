@@ -195,6 +195,7 @@ from parts.food import main_food  # Assuming this module exists
 from parts.sliding_images import main_sliding_images  # Assuming this module exists
 from parts.about import main_about  # Assuming this module exists
 from parts.helpline import main_helpline  # Assuming this module exists
+from parts.attendeeAccepted import main_attendance_accepted  # Assuming this module exists
 
 def main_home():
     # Page config must be the first Streamlit command
@@ -260,6 +261,8 @@ def main_home():
             
         if st.button("Food", key="food", use_container_width=True):
             st.session_state.current_page = 'food'
+        if st.button("Attendance Accepted", key="attendance_accepted", use_container_width=True):
+            st.session_state.current_page = 'attendance_accepted'
 
     # Add a divider
     st.divider()
@@ -295,6 +298,8 @@ def main_home():
         
     elif st.session_state.current_page == 'food':
         main_food()
+    elif st.session_state.current_page == 'attendance_accepted':
+        main_attendance_accepted()
 
     # Add some spacing at the bottom
     st.markdown("<br><br>", unsafe_allow_html=True)

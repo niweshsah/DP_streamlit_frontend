@@ -1,7 +1,6 @@
-
-
 import streamlit as st
 import requests
+
 
 def fetch_attendees(url, conference_code):
     """Fetch attendees list and count from the given API URL."""
@@ -17,6 +16,7 @@ def fetch_attendees(url, conference_code):
     except requests.exceptions.RequestException as e:
         st.error(f"❌ Failed to fetch data: {e}")
     return 0, []
+
 
 
 def create_attendee_card(attendee):
@@ -37,9 +37,7 @@ def create_attendee_card(attendee):
         </div>
     """
 
-
-
-def main_show_attendance():
+def main_attendance_accepted():
     """Main function to render the Streamlit app."""
     # Custom CSS for better styling
     st.markdown("""
@@ -112,7 +110,6 @@ def main_show_attendance():
     
     conference_code = st.session_state.get('current_user', 'Guest')
     
-
     if conference_code:
         # Add refresh button
         col1, col2, col3 = st.columns([3, 1, 3])
@@ -120,23 +117,22 @@ def main_show_attendance():
             if st.button("🔄 Refresh Data", key="refresh"):
                 st.cache_data.clear()
 
-
         # Backend API URLs
-        ATTENDEES_FALSE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/attendees-false"
-        ATTENDEES_TRUE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/attendees-true"
-
+        ATTENDEES_FALSE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/total-attendees"
+        ATTENDEES_TRUE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/attendees-false"
 
         # Fetch data
-        false_count, attendees_false = fetch_attendees(ATTENDEES_FALSE_URL, conference_code)
-        true_count, attendees_true = fetch_attendees(ATTENDEES_TRUE_URL, conference_code)
+        attendee_total_count, attendee_total = fetch_attendees(ATTENDEES_FALSE_URL, conference_code)
+        attendee_accepted_count, attendee_accepted = fetch_attendees(ATTENDEES_TRUE_URL, conference_code)
 
         # Display total statistics
-        total_attendees = true_count + false_count
+        # total_attendees = attendee_accepted_count + attendee_total_count
+        
+        total_attendees = attendee_total_count
         if total_attendees > 0:
-            attendance_rate = (true_count / total_attendees) * 100
+            attendance_rate = (attendee_accepted_count / total_attendees) * 100
         else:
             attendance_rate = 0
-
 
         st.markdown("""
             <div class="attendance-stats">
@@ -151,7 +147,6 @@ def main_show_attendance():
                     </div>
                 </div>
             </div>
-            
         """.format(total_attendees, attendance_rate), unsafe_allow_html=True)
 
         # Display attendees in columns
@@ -159,26 +154,26 @@ def main_show_attendance():
 
         with col1:
             st.markdown(f"""
-                <div class="section-not-attended">
-                    <h3>📝 Not Attended ({false_count})</h3>
+                <div class="section-attendee invited">
+                    <h3>📝 Not Attended ({attendee_total_count})</h3>
                 </div>
             """, unsafe_allow_html=True)
             
-            for attendee in attendees_false:
+            for attendee in attendee_total:
                 st.markdown(create_attendee_card(attendee), unsafe_allow_html=True)
 
         with col2:
             st.markdown(f"""
-                <div class="section-attended">
-                    <h3>✅ Attended ({true_count})</h3>
+                <div class="section-attendee accepted">
+                    <h3>✅ Attended ({attendee_accepted_count})</h3>
                 </div>
             """, unsafe_allow_html=True)
             
-            for attendee in attendees_true:
+            for attendee in attendee_accepted:
                 st.markdown(create_attendee_card(attendee), unsafe_allow_html=True)
 
     else:
         st.info("👋 Please enter a conference code to view attendance.")
 
 if __name__ == "__main__":
-    main_show_attendance()
+    main_attendance_accepted()
