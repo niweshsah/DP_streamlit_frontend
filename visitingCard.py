@@ -195,30 +195,39 @@ with st.container():
                 </a>
             </div>
         """, unsafe_allow_html=True)
+        
+        st.markdown("""
+    <style>
+        div.stButton > button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-        # Download vCard Button
-        if st.button("💾 Save Contact", key="download_button", class_name="button"):
+        div.stButton > button:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+
+        if st.button("💾 Save Contact", key="download_button"):
             # Generate vCard data
             vcard = f"""BEGIN:VCARD
-VERSION:3.0
-FN:{user_data['name']}
-TITLE:{user_data['title']}
-ORG:{user_data['company']}
-EMAIL:{user_data['email']}
-TEL:{user_data['phone']}
-URL:{user_data['website']}
-ADR;TYPE=WORK:{user_data['location']}
-END:VCARD"""
-            
-            # Create download button for vCard
-            b64_vcard = base64.b64encode(vcard.encode()).decode()
-            href = f'<a href="data:text/vcard;base64,{b64_vcard}" download="contact.vcf">📥 Download vCard</a>'
-            st.markdown(href, unsafe_allow_html=True)
+        VERSION:3.0
+        FN:{user_data['name']}
+        TITLE:{user_data['title']}
+        ORG:{user_data['company']}
+        EMAIL:{user_data['email']}
+        TEL:{user_data['phone']}
+        URL:{user_data['website']}
+        ADR;TYPE=WORK:{user_data['location']}
+        END:VCARD"""
 
-# Footer
-st.markdown("---")
-st.markdown("""
-    <p class="footer">
-        Made with ❤️ using Streamlit
-    </p>
-""", unsafe_allow_html=True)
+            # Base64 encode vCard to create a downloadable link
+            b64_vcard = base64.b64encode(vcard.encode()).decode()
+            href = f'<a href="data:text/vcard;base64,{b64_vcard}" download="{user_data["name"]}.vcf">📥 Download Contact</a>'
+            st.markdown(href, unsafe_allow_html=True)
