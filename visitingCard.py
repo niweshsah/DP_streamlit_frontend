@@ -1036,7 +1036,7 @@ if user_data:
                 'email': '✉️',
                 'mobile': '📱',
                 'location': '📍',
-                'website': '🌐'
+                # 'website': '🌐'
             }
             
             for item, icon in contact_icons.items():
