@@ -14,9 +14,9 @@ from dotenv import load_dotenv
 import os
 
 # Function to send QR code email (moved to the top)
-def send_qr_code_email(name, email, mobile, designation, organization, location, linkedin, about):
+def send_qr_code_email(name, email, mobile, designation, organization, location, linkedin, about,conference_code):
     # Create QR Code Data
-    qr_data = f"http://localhost:27017/user/conference/{conference_code}/eventCard/eventCard/getInfo/{email}"  
+    qr_data = f"https://niweshvistingcard.streamlit.app/?email={email}&confcode={conference_code}"  
     
     # Generate QR Code
     qr = qrcode.QRCode(
@@ -126,7 +126,7 @@ if st.button("Submit"):
             st.write(f"Response content: {response.text}")  # Log the raw response content
             if response.status_code == 200:
                 st.success("✅ Your information was successfully submitted!")
-                send_qr_code_email(name, email, mobile, designation, organization, location, linkedin, about)
+                send_qr_code_email(name, email, mobile, designation, organization, location, linkedin, about,conference_code)
             else:
                 st.error(f"❌ Failed to submit. Status code: {response.status_code}")
                 st.error(response.json())
