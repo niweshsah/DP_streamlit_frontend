@@ -126,7 +126,7 @@ def main():
         </style>
     """, unsafe_allow_html=True)
 
-    st.title("💼 Digital Business Card Creator")
+    st.title("💼 GatherHub Business Card Creator")
     st.markdown("Create your personalized QR code in minutes!")
 
     # Get URL parameters
