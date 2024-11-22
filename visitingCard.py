@@ -3,6 +3,7 @@ from PIL import Image
 import requests
 from io import BytesIO
 import base64
+import json
 
 # Page configuration
 st.set_page_config(
@@ -163,23 +164,56 @@ st.markdown("""
         .contact-item:hover {
             background-color: #e5e7eb;
         }
-    }
+    }import streamlit as st
+from PIL import Image
+import requests
+from io import BytesIO
+import base64
+import json
 </style>
 """, unsafe_allow_html=True)
 
-# User data
-user_data = {
-    "name": "test Sah",
-    "title": "Student",
-    "company": "IIT Mandi",
-    "email": "sahniwesh@gmail.com",
-    "phone": "+91 69696969",
-    "website": "www.niweshsah.dev",
-    "location": "San Francisco, CA",
-    "github": "niweshsah",
-    "linkedin": "niwesh-sah-86b9a027b",
-    "avatar_url": "https://api.dicebear.com/6.x/initials/svg?seed=NS"
-}
+def fetch_user_data(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as err:
+        st.error(f"Error fetching user data: {err}")
+        return None
+
+if st.experimental_get_query_params().get("userId"):
+    userId = st.experimental_get_query_params()["userId"][0]
+else:
+    userId = st.text_input("Enter User ID")
+
+
+# URL to fetch user data
+user_data_url = f"http://localhost:27017/user/businessCard/getInfo/{userId}"
+
+
+# Fetch user data
+user_data = fetch_user_data(user_data_url)
+
+
+# Check if user data is available
+if user_data:
+
+
+    # Extract relevant information from user data
+    name = user_data.get("name", "")
+    title = user_data.get("title", "")
+    company = user_data.get("company", "")
+    email = user_data.get("email", "")
+    phone = user_data.get("phone", "")
+    website = user_data.get("website", "")
+    location = user_data.get("location", "")
+    github = user_data.get("github", "")
+    linkedin = user_data.get("linkedin", "")
+    avatar_url = user_data.get("avatar_url", "")
+    
+else:
+    st.error("User data not found!")
 
 def get_avatar_image():
     try:
