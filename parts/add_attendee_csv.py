@@ -325,7 +325,7 @@ def send_email_to_attendees(attendees: List[Dict], smtp_config: Dict) -> Tuple[b
                 
                 Attendance will be marked based on the email sent to you. Please make sure to attend the conference. So you are requested to attend to fill your details in the link provided below:
                 
-                https://dpappfrontendgather.streamlit.app/?email={recipient_email}&conference_code=DP2024
+                https://niweshvistingcardposting.streamlit.app/?email={recipient_email}&conference_code=DP2024
                 
                 Best regards,
                 GatherHub Team
