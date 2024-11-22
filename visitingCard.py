@@ -976,7 +976,7 @@ if not email:
             <h1 style='color: #6366f1; font-size: 2rem; margin-bottom: 1rem;'>🪪 Digital Business Card</h1>
         </div>
     """, unsafe_allow_html=True)
-    email = st.text_input("Enter User ID", placeholder="Type your user ID here...")
+    # email = st.text_input("Enter User ID", placeholder="Type your user ID here...")
 
 # URL to fetch user data
 # user_data_url = f"http://localhost:27017/user/businessCard/getInfo/{email}"
