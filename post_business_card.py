@@ -107,7 +107,7 @@ about = st.text_area("📝 About Me", placeholder="Write a brief introduction ab
 # Form Submission Section
 st.markdown('<div class="section-header">Submit Your Business Card</div>', unsafe_allow_html=True)
 
-post_url = f"http://localhost:27017/user/conference/{conference_code}/eventCard/acceptedInvitation"  # Replace with the actual endpoint
+post_url = f"https://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/acceptedInvitation"  # Replace with the actual endpoint
 
 if st.button("Submit"):
     if email:  # Ensure email is provided in the URL
