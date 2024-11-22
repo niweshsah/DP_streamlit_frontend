@@ -378,6 +378,7 @@ def main_attendee_csv():
 
     post_url = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/sendInvitation"
 
+
     # SMTP Configuration
     smtp_config = {
         'server': "smtp.gmail.com",
