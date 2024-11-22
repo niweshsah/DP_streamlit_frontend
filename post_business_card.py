@@ -707,7 +707,7 @@ query_params = st.query_params
 # Get the 'email' and 'conference_code' parameters from the query string
 # email = query_params.get('email', [''])[0]  # Default to an empty string if not provided
 email = query_params.get('email', [''])  # Default to an empty string if not provided
-conference_code = query_params.get('conference_code', ['DP2024']) # Default to 'DP2024'
+conference_code = query_params.get('conference_code', 'DP2024') # Default to 'DP2024'
 
 
 
@@ -751,7 +751,8 @@ about = st.text_area("📝 About Me", placeholder="Write a brief introduction ab
 # Form Submission Section
 st.markdown('<div class="section-header">Submit Your Business Card</div>', unsafe_allow_html=True)
 
-post_url = f"https://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/acceptedInvitation"  # Replace with the actual endpoint
+# post_url = f"https://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/acceptedInvitation"  # Replace with the actual endpoint
+post_url = f"http://localhost:27017/user/conference/{conference_code}/eventCard/acceptedInvitation"  # Replace with the actual endpoint
 
 if st.button("Submit"):
     if email:  # Ensure email is provided in the URL
@@ -770,6 +771,8 @@ if st.button("Submit"):
         print(conference_code)
         try:
             response = requests.post(post_url, json=data)
+            st.write(f"Response status code: {response.status_code}")  # Log the status code
+            st.write(f"Response content: {response.text}")  # Log the raw response content
             if response.status_code == 200:
                 st.success("✅ Your information was successfully submitted!")
             else:
