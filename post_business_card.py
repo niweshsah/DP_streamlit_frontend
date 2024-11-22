@@ -110,8 +110,8 @@ def send_email(recipient_email, otp):
     """Send OTP via email"""
     try:
         sender_email = "gatherhubiitmandi@gmail.com"
-        # sender_password = st.secrets["credentials"]["EMAIL_PASSWORD"]
-        sender_password = os.environ.get('EMAIL_PASSWORD')
+        sender_password = st.secrets["credentials"]["EMAIL_PASSWORD"]
+        # sender_password = os.environ.get('EMAIL_PASSWORD')
         
         message = MIMEMultipart()
         message['From'] = sender_email
@@ -157,8 +157,8 @@ col1, col2 = st.columns(2)
 with col1:
     name = st.text_input("👤 Full Name", placeholder="John Doe")
     email = st.text_input("📧 Email Address", placeholder="john@example.com")
-    mobile = st.text_input("📱 Mobile Number", placeholder="+1 (234) 567-8900")
-    designation = st.text_input("🎯 Designation", placeholder="Senior Developer")
+    mobile = st.text_input("📱 Mobile Number", placeholder="Fill your 10 digit mobile number")
+    designation = st.text_input("🎯 Designation", placeholder="Fill your Designation")
 
 with col2:
     organization = st.text_input("🏢 Organization", placeholder="Tech Corp")
