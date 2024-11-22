@@ -978,7 +978,9 @@ if not user_id:
     user_id = st.text_input("Enter User ID", placeholder="Type your user ID here...")
 
 # URL to fetch user data
-user_data_url = f"http://localhost:27017/user/businessCard/getInfo/{user_id}"
+# user_data_url = f"http://localhost:27017/user/businessCard/getInfo/{user_id}"
+
+user_data_url = f"https://gatherhub-r7yr.onrender.com/user/businessCard/getInfo/{user_id}"
 
 # Fetch user data with loading state
 if user_id:
