@@ -220,15 +220,8 @@ with st.container():
             vcard = f"""BEGIN:VCARD
         VERSION:3.0
         N:{user_data['name']};;;;
-        FN:{user_data['name']}
-        TITLE:{user_data['title']}
-        ORG:{user_data['company']}
-        EMAIL;type=INTERNET;type=WORK:{user_data['email']}
-        TEL;type=CELL:{user_data['phone']}
-        URL:{user_data['website']}
-        ADR;type=WORK:;;{user_data['location']};;;
-        X-SOCIALPROFILE;type=github:https://github.com/{user_data['github']}
-        X-SOCIALPROFILE;type=linkedin:https://www.linkedin.com/in/{user_data['linkedin']}
+        FN:{user_data['phone']}
+
         END:VCARD"""
 
             # Create download link with proper MIME type
