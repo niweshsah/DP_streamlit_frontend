@@ -76,8 +76,9 @@ st.set_page_config(
 # Extract email and conference code from the URL
 query_params = st.query_params
 email = query_params.get('email', '')  # Default to an empty string if not provided
+print("email: ", email)
 conference_code = query_params.get('conference_code', 'DP2024')  # Default to 'DP2024'
-
+print("conference_code: ", conference_code)
 # Header section
 st.title("💼 Digital Business Card Creator")
 st.markdown("""
@@ -117,10 +118,11 @@ if st.button("Submit"):
             "designation": designation,
             "organization": organization,
             "location": location,
-            "linkedin": linkedin,
+            "linkedIn": linkedin,
             "about": about,
         }
         try:
+            print()
             print("data: ", data)
             response = requests.post(post_url, json=data)
             st.write(f"Response status code: {response.status_code}")  # Log the status code
