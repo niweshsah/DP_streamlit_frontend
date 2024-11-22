@@ -705,8 +705,23 @@ st.set_page_config(
 # query_params = st.experimental_get_query_params()
 query_params = st.query_params
 # Get the 'email' and 'conference_code' parameters from the query string
-email = query_params.get('email', [''])[0]  # Default to an empty string if not provided
-conference_code = query_params.get('conference_code', ['DP2024'])[0]  # Default to 'DP2024'
+# email = query_params.get('email', [''])[0]  # Default to an empty string if not provided
+email = query_params.get('email', [''])  # Default to an empty string if not provided
+conference_code = query_params.get('conference_code', ['DP2024']) # Default to 'DP2024'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Header section
 st.title("💼 Digital Business Card Creator")
@@ -736,7 +751,7 @@ about = st.text_area("📝 About Me", placeholder="Write a brief introduction ab
 # Form Submission Section
 st.markdown('<div class="section-header">Submit Your Business Card</div>', unsafe_allow_html=True)
 
-post_url = f"https://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/sendInvitation"  # Replace with the actual endpoint
+post_url = f"https://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/acceptedInvitation"  # Replace with the actual endpoint
 
 if st.button("Submit"):
     if email:  # Ensure email is provided in the URL
@@ -750,6 +765,9 @@ if st.button("Submit"):
             "linkedin": linkedin,
             "about": about,
         }
+        print(data)
+        print()
+        print(conference_code)
         try:
             response = requests.post(post_url, json=data)
             if response.status_code == 200:
