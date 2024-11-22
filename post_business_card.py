@@ -837,10 +837,6 @@
 
 
 
-
-
-
-
 import streamlit as st
 import requests
 import qrcode
@@ -849,6 +845,11 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from a .env file
+load_dotenv()
 
 # Page configuration
 st.set_page_config(
@@ -919,6 +920,7 @@ if st.button("Submit"):
     else:
         st.error("❌ Email is missing. Please provide a valid email in the URL.")
 
+# Function to send QR code email
 def send_qr_code_email(name, email, mobile, designation, organization, location, linkedin, about):
     # Create QR Code Data
     qr_data = f"""
@@ -953,8 +955,11 @@ def send_qr_code_email(name, email, mobile, designation, organization, location,
     body = f"Dear {name},\n\nThank you for submitting your business card. Please find your QR code attached.\n\nBest regards,\nConference Team"
     
     msg = MIMEMultipart()
+    sender_email = ""  # Get sender email from environment variable
+    # sender_email = os.getenv('SENDER_EMAIL')  # Get sender email from environment variable
     sender_email = "gatherhubiitmandi@gmail.com"
     sender_password = "armf odpa unrp vkjz"  # Use environment variables in production
+    # sender_password = os.getenv('SENDER_PASSWORD')  # Get sender email password from environment variable
     msg['From'] = sender_email  # Replace with your email
     msg['To'] = email
     msg['Subject'] = subject
@@ -969,7 +974,7 @@ def send_qr_code_email(name, email, mobile, designation, organization, location,
         # SMTP server configuration (for Gmail, change if using another service)
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
-        server.login(sender_email, sender_password)  # Replace with your credentials
+        server.login(sender_email, sender_password)  # Use environment variables
         server.sendmail(msg['From'], msg['To'], msg.as_string())
         server.quit()
         st.success("✅ A QR Code has been sent to your email!")
