@@ -218,7 +218,7 @@ with st.container():
         if st.button("📱 Save to Phone", key="save_contact"):
             # Generate vCard data with proper formatting and all available fields
             vcard = f"""BEGIN:VCARD
-            VERSION:3.0
+            VERSION:2.1
             N:{user_data['name']};;;;
             FN:{user_data['name']}
             TEL;TYPE=cell:{user_data['phone']}
