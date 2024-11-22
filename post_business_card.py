@@ -8,7 +8,8 @@ import random
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from datetime import datetime, time, timedelta
+from datetime import datetime, timedelta  # Only import what's needed
+import time  # Import the standard Python time module
 import os
 
 # Page configuration
@@ -109,7 +110,8 @@ def send_email(recipient_email, otp):
     """Send OTP via email"""
     try:
         sender_email = "gatherhubiitmandi@gmail.com"
-        sender_password = st.secrets["credentials"]["EMAIL_PASSWORD"]
+        # sender_password = st.secrets["credentials"]["EMAIL_PASSWORD"]
+        sender_password = os.environ.get('EMAIL_PASSWORD')
         
         message = MIMEMultipart()
         message['From'] = sender_email
@@ -309,7 +311,7 @@ if st.button("🎉 Create Business Card", type="primary"):
                     mime="image/png"
                 )
             else:
-                st.error(f"Submission failed: {response.text}")
+                st.error(f"{response.text}")
         except Exception as e:
             st.error(f"An error occurred: {e}")
 
