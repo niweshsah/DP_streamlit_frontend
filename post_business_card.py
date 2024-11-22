@@ -299,7 +299,7 @@ if st.button("Submit"):
                 # Display QR code
                 st.image(buffer, caption="Scan this QR code to view your business card info.", use_column_width=True)
             else:
-                st.error(f"Failed to submit. Server responded with status: {response.status_code}")
-                st.error(f"Response: {response.text}")
+                # st.error(f"Failed to submit. Server responded with status: {response.status_code}")
+                st.error(f"{response.text}")
         except requests.exceptions.RequestException as e:
             st.error(f"An error occurred: {e}")
