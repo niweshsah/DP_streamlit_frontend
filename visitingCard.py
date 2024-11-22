@@ -218,11 +218,11 @@ with st.container():
         if st.button("📱 Save to Phone", key="save_contact"):
             # Generate vCard data with proper formatting and all available fields
             vcard = f"""BEGIN:VCARD
-        VERSION:3.0
-        N:{user_data['name']};;;;
-        FN:{user_data['phone']}
-
-        END:VCARD"""
+            VERSION:3.0
+            N:{user_data['name']};;;;
+            FN:{user_data['name']}
+            TEL;TYPE=cell:{user_data['phone']}
+            END:VCARD"""
 
             # Create download link with proper MIME type
             b64_vcard = base64.b64encode(vcard.encode()).decode()
