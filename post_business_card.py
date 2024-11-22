@@ -110,8 +110,8 @@ def send_email(recipient_email, otp):
     """Send OTP via email"""
     try:
         sender_email = "gatherhubiitmandi@gmail.com"
-        sender_password = st.secrets["credentials"]["EMAIL_PASSWORD"]
-        # sender_password = os.environ.get('EMAIL_PASSWORD')
+        # sender_password = st.secrets["credentials"]["EMAIL_PASSWORD"]
+        sender_password = os.environ.get('EMAIL_PASSWORD')
         
         message = MIMEMultipart()
         message['From'] = sender_email
