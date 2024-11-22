@@ -118,19 +118,24 @@ def main_attendance_accepted():
                 st.cache_data.clear()
 
         # Backend API URLs
-        ATTENDEES_FALSE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/total-attendees"
-        ATTENDEES_TRUE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/attendees-false"
+        ATTENDEES_TOTAL_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/total-attendees"
+        ATTENDEES_FALSE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/attendees-false"
+        
+        ATTENDEES_TRUE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/attendees-true"
+
 
         # Fetch data
-        attendee_total_count, attendee_total = fetch_attendees(ATTENDEES_FALSE_URL, conference_code)
-        attendee_accepted_count, attendee_accepted = fetch_attendees(ATTENDEES_TRUE_URL, conference_code)
+        attendee_total_count, attendee_total = fetch_attendees(ATTENDEES_TOTAL_URL, conference_code)
+        attendee_accepted_count, attendee_accepted = fetch_attendees(ATTENDEES_FALSE_URL, conference_code)
+        
+        attendee_true_count, attendee_true = fetch_attendees(ATTENDEES_TRUE_URL, conference_code)
 
         # Display total statistics
         # total_attendees = attendee_accepted_count + attendee_total_count
         
         total_attendees = attendee_total_count
         if total_attendees > 0:
-            attendance_rate = (attendee_accepted_count / total_attendees) * 100
+            attendance_rate = (attendee_accepted_count + attendee_true_count/ total_attendees) * 100
         else:
             attendance_rate = 0
 

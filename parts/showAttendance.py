@@ -19,6 +19,8 @@ def fetch_attendees(url, conference_code):
     return 0, []
 
 
+
+
 def create_attendee_card(attendee):
     """Create HTML for an attendee card"""
     return f"""
