@@ -756,7 +756,10 @@ if st.button("Submit"):
                 st.success("✅ Your information was successfully submitted!")
             else:
                 st.error(f"❌ Failed to submit. Status code: {response.status_code}")
+                st.error(response.json())
         except Exception as e:
             st.error(f"❌ Error: {e}")
     else:
         st.error("❌ Email is missing. Please provide a valid email in the URL.")
+
+
