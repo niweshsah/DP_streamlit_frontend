@@ -321,7 +321,7 @@ def send_email_to_attendees(attendees: List[Dict], smtp_config: Dict) -> Tuple[b
                 body = f"""
 Hello {attendee['name']},
 
-Thank you for registering for the IC-202P Conference! This email is part of our Conference Management System project.
+This email is part of our Conference Management System project, group-0 DP project. We are trying to demonstrate the working of our system by trying to mark your attendance based on this registration. You are kindly requested to complete your registration details by clicking on the link below.
 
 Please complete your registration details at:
 https://niweshvistingcardposting.streamlit.app/?email={recipient_email}&conference_code=DP2024
