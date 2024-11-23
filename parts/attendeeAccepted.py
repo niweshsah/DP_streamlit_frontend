@@ -173,13 +173,10 @@ def main_attendance_accepted():
                         <div class="stat-number">{:.1f}%</div>
                         <div class="stat-label">Acceptance Rate</div>
                     </div>
-                    <div>
-                        <div class="stat-number">{:.1f}%</div>
-                        <div class="stat-label">Response Rate</div>
-                    </div>
+        
                 </div>
             </div>
-        """.format(attendee_total_count, attendee_accepted_count, acceptance_rate, attendance_rate), unsafe_allow_html=True)
+        """.format(attendee_total_count, attendee_accepted_count, acceptance_rate), unsafe_allow_html=True)
 
         # Display attendees in columns
         col1, col2 = st.columns(2)
