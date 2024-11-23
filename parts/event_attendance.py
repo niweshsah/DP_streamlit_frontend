@@ -194,6 +194,163 @@
 
 
 
+# import streamlit as st
+# import requests
+# import pandas as pd
+# from datetime import datetime
+
+# def fetch_data(url, endpoint):
+#     """Generic function to fetch data from API"""
+#     try:
+#         response = requests.get(f"{url}/{endpoint}")
+#         response.raise_for_status()
+#         return response.json()
+#     except requests.exceptions.RequestException as e:
+#         st.error(f"Failed to fetch data: {str(e)}")
+#         return None
+
+# @st.cache_data(ttl=300)  # Cache for 5 minutes
+# def load_conference_data(conference_code):
+#     """Load all conference data with caching"""
+#     base_url = f"https://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard"
+    
+#     # Fetch attendees
+#     attendees_data = fetch_data(base_url, "getAcceptedAttendees")
+#     total_attendees = attendees_data.get('count', 0) if attendees_data else 0
+    
+#     # Fetch events
+#     events_data = fetch_data(base_url, "get-conference-events")
+    
+#     return total_attendees, events_data
+
+# def format_percentage(value):
+#     """Format a number as percentage string"""
+#     return f"{value:.1f}%"
+
+# def main_event_attendance():
+#     st.title("Conference Events Dashboard")
+    
+#     # Get conference code from session state
+#     conference_code = st.session_state.get('current_user', 'DP2024')
+    
+#     # Add settings in sidebar
+#     with st.sidebar:
+#         st.title("Dashboard Settings")
+#         max_capacity = st.number_input(
+#             "Maximum Attendees per Event",
+#             min_value=10,
+#             max_value=1000,
+#             value=100
+#         )
+    
+#     # Load data
+#     with st.spinner("Loading dashboard data..."):
+#         total_attendees, events_data = load_conference_data(conference_code)
+        
+#         if not events_data:
+#             st.warning("No events found for this conference")
+#             return
+            
+#         # Create DataFrame
+#         df = pd.DataFrame(events_data)
+#         df['attendance_percentage'] = (df['totalAttendees'] / max_capacity * 100).round(2)
+        
+#         # Summary metrics
+#         col1, col2, col3, col4 = st.columns(4)
+#         with col1:
+#             st.metric("Total Events", len(df))
+#         with col2:
+#             st.metric("Average Attendance", f"{df['totalAttendees'].mean():.1f}")
+#         with col3:
+#             st.metric("Total Attendees", df['totalAttendees'].sum())
+#         with col4:
+#             st.metric("Highest Attendance", df['totalAttendees'].max())
+        
+#         # Events bar chart using st.bar_chart
+#         st.header("Event Attendance")
+#         st.bar_chart(
+#             data=df.set_index('title')['attendance_percentage'],
+#             use_container_width=True
+#         )
+        
+#         # Detailed table
+#         st.header("Event Details")
+        
+#         # Format datetime
+#         df['formatted_time'] = pd.to_datetime(df['time']).dt.strftime('%Y-%m-%d %H:%M')
+        
+#         # Display table
+#         st.dataframe(
+#             df[['title', 'formatted_time', 'venue', 'totalAttendees', 'attendance_percentage']].rename(columns={
+#                 'title': 'Event Title',
+#                 'formatted_time': 'Time',
+#                 'venue': 'Venue',
+#                 'totalAttendees': 'Total Attendees',
+#                 'attendance_percentage': 'Attendance %'
+#             }).assign(**{
+#                 'Attendance %': lambda x: x['attendance_percentage'].apply(format_percentage)
+#             }).drop(columns=['attendance_percentage']),
+#             hide_index=True,
+#             use_container_width=True
+#         )
+        
+#         # Overall attendance status
+#         st.header("Overall Attendance Status")
+#         overall_percentage = (df['totalAttendees'].sum() / (max_capacity * len(df)) * 100)
+#         st.progress(min(overall_percentage / 100, 1.0))
+#         st.write(f"Overall attendance: {format_percentage(overall_percentage)}")
+        
+#         # Download option
+#         st.download_button(
+#             label="Download Event Data (CSV)",
+#             data=df.to_csv(index=False),
+#             file_name=f"event_attendance_{datetime.now().strftime('%Y%m%d')}.csv",
+#             mime="text/csv"
+#         )
+
+# if __name__ == "__main__":
+#     st.set_page_config(
+#         page_title="Event Attendance Dashboard",
+#         page_icon="📊",
+#         layout="wide"
+#     )
+#     main_event_attendance()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import streamlit as st
 import requests
 import pandas as pd
@@ -223,10 +380,6 @@ def load_conference_data(conference_code):
     
     return total_attendees, events_data
 
-def format_percentage(value):
-    """Format a number as percentage string"""
-    return f"{value:.1f}%"
-
 def main_event_attendance():
     st.title("Conference Events Dashboard")
     
@@ -253,7 +406,15 @@ def main_event_attendance():
             
         # Create DataFrame
         df = pd.DataFrame(events_data)
-        df['attendance_percentage'] = (df['totalAttendees'] / max_capacity * 100).round(2)
+        
+        # Calculate attendance percentage
+        df['attendance_percentage'] = (df['totalAttendees'] / max_capacity * 100).round(1)
+        
+        # Format time
+        df['formatted_time'] = pd.to_datetime(df['time']).dt.strftime('%Y-%m-%d %H:%M')
+        
+        # Add percentage symbol
+        df['attendance_display'] = df['attendance_percentage'].astype(str) + '%'
         
         # Summary metrics
         col1, col2, col3, col4 = st.columns(4)
@@ -266,7 +427,7 @@ def main_event_attendance():
         with col4:
             st.metric("Highest Attendance", df['totalAttendees'].max())
         
-        # Events bar chart using st.bar_chart
+        # Events bar chart
         st.header("Event Attendance")
         st.bar_chart(
             data=df.set_index('title')['attendance_percentage'],
@@ -276,20 +437,17 @@ def main_event_attendance():
         # Detailed table
         st.header("Event Details")
         
-        # Format datetime
-        df['formatted_time'] = pd.to_datetime(df['time']).dt.strftime('%Y-%m-%d %H:%M')
+        # Create display DataFrame
+        display_df = pd.DataFrame({
+            'Event Title': df['title'],
+            'Time': df['formatted_time'],
+            'Venue': df['venue'],
+            'Total Attendees': df['totalAttendees'],
+            'Attendance %': df['attendance_display']
+        })
         
-        # Display table
         st.dataframe(
-            df[['title', 'formatted_time', 'venue', 'totalAttendees', 'attendance_percentage']].rename(columns={
-                'title': 'Event Title',
-                'formatted_time': 'Time',
-                'venue': 'Venue',
-                'totalAttendees': 'Total Attendees',
-                'attendance_percentage': 'Attendance %'
-            }).assign(**{
-                'Attendance %': lambda x: x['attendance_percentage'].apply(format_percentage)
-            }).drop(columns=['attendance_percentage']),
+            display_df,
             hide_index=True,
             use_container_width=True
         )
@@ -298,7 +456,7 @@ def main_event_attendance():
         st.header("Overall Attendance Status")
         overall_percentage = (df['totalAttendees'].sum() / (max_capacity * len(df)) * 100)
         st.progress(min(overall_percentage / 100, 1.0))
-        st.write(f"Overall attendance: {format_percentage(overall_percentage)}")
+        st.write(f"Overall attendance: {overall_percentage:.1f}%")
         
         # Download option
         st.download_button(
