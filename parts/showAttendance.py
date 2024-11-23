@@ -2,6 +2,9 @@
 
 import streamlit as st
 import requests
+import os
+
+rest_api_url = os.getenv("REST_API_URL")
 
 def fetch_attendees(url, conference_code):
     """Fetch attendees list and count from the given API URL."""
@@ -124,12 +127,13 @@ def main_show_attendance():
 
 
         # Backend API URLs
-        ATTENDEES_FALSE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/attendees-false"
-        ATTENDEES_TRUE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/attendees-true"
+        ATTENDEES_FALSE_URL = f"{rest_api_url}/user/conference/{conference_code}/eventCard/attendees-false"
+        ATTENDEES_TRUE_URL = f"{rest_api_url}/user/conference/{conference_code}/eventCard/attendees-true"
 
 
         # Fetch data
         false_count, attendees_false = fetch_attendees(ATTENDEES_FALSE_URL, conference_code)
+        st.write(false_count)
         true_count, attendees_true = fetch_attendees(ATTENDEES_TRUE_URL, conference_code)
 
         # Display total statistics
