@@ -319,16 +319,21 @@ def send_email_to_attendees(attendees: List[Dict], smtp_config: Dict) -> Tuple[b
                 recipient_email = attendee["email"]
                 subject = "🎉 Registration Confirmation"
                 body = f"""
-                Hello {attendee['name']},
+Hello {attendee['name']},
 
-                This is group 0 project for the course IC-202P. This email is part of our project : Conference Management System.
-                
-                Attendance will be marked based on the email sent to you. Please make sure to attend the conference. So you are requested to attend to fill your details in the link provided below:
-                
-                https://niweshvistingcardposting.streamlit.app/?email={recipient_email}&conference_code=DP2024
-                
-                Best regards,
-                GatherHub Team
+This is Group 0's project for the course IC-202P. This email is part of our project: **Conference Management System**.
+
+Attendance will be marked based on the email sent to you. Please make sure to attend the conference. You are requested to fill in your details at the provided link:
+
+[Click here to fill your details](https://niweshvistingcardposting.streamlit.app/?email={recipient_email}&conference_code=DP2024)
+
+If you face any issues, kindly contact me at:
+- **Name:** Niwesh Sah  
+- **Mobile:** 9451864348  
+- **Roll No.:** B23277  
+
+Best regards,  
+**GatherHub Team**
                 """
 
                 msg = MIMEMultipart()
