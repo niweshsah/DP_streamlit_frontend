@@ -194,237 +194,124 @@
 
 
 
-
-
 import streamlit as st
 import requests
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
 from datetime import datetime
-import time
 
-# Constants
-MAX_ATTENDEES = 100  # Default maximum capacity
-CACHE_TTL = 300  # Cache timeout in seconds
+def fetch_data(url, endpoint):
+    """Generic function to fetch data from API"""
+    try:
+        response = requests.get(f"{url}/{endpoint}")
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        st.error(f"Failed to fetch data: {str(e)}")
+        return None
 
-class ConferenceAPI:
-    def __init__(self, base_url, conference_code):
-        self.base_url = base_url
-        self.conference_code = conference_code
-        
-    def _make_request(self, endpoint):
-        """Make API request with error handling"""
-        try:
-            response = requests.get(f"{self.base_url}/{endpoint}")
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            st.error(f"API Error: {str(e)}")
-            return None
-            
-    @st.cache_data(ttl=CACHE_TTL)
-    def fetch_attendees(self):
-        """Fetch attendees with caching"""
-        data = self._make_request(f"getAcceptedAttendees")
-        if data:
-            return data.get('count', 0), data.get('attendees', [])
-        return 0, []
-        
-    @st.cache_data(ttl=CACHE_TTL)
-    def fetch_events(self):
-        """Fetch events with caching"""
-        return self._make_request("get-conference-events")
+@st.cache_data(ttl=300)  # Cache for 5 minutes
+def load_conference_data(conference_code):
+    """Load all conference data with caching"""
+    base_url = f"https://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard"
+    
+    # Fetch attendees
+    attendees_data = fetch_data(base_url, "getAcceptedAttendees")
+    total_attendees = attendees_data.get('count', 0) if attendees_data else 0
+    
+    # Fetch events
+    events_data = fetch_data(base_url, "get-conference-events")
+    
+    return total_attendees, events_data
 
-class DashboardUI:
-    def __init__(self):
-        self.setup_page_config()
-        self.setup_sidebar()
-        
-    def setup_page_config(self):
-        st.set_page_config(
-            page_title="Conference Dashboard",
-            page_icon="📊",
-            layout="wide",
-            initial_sidebar_state="expanded"
+def format_percentage(value):
+    """Format a number as percentage string"""
+    return f"{value:.1f}%"
+
+def main_event_attendance():
+    st.title("Conference Events Dashboard")
+    
+    # Get conference code from session state
+    conference_code = st.session_state.get('current_user', 'DP2024')
+    
+    # Add settings in sidebar
+    with st.sidebar:
+        st.title("Dashboard Settings")
+        max_capacity = st.number_input(
+            "Maximum Attendees per Event",
+            min_value=10,
+            max_value=1000,
+            value=100
         )
+    
+    # Load data
+    with st.spinner("Loading dashboard data..."):
+        total_attendees, events_data = load_conference_data(conference_code)
         
-    def setup_sidebar(self):
-        with st.sidebar:
-            st.title("📈 Dashboard Settings")
-            st.session_state.max_attendees = st.number_input(
-                "Maximum Attendees per Event",
-                min_value=10,
-                max_value=1000,
-                value=MAX_ATTENDEES
-            )
-            st.info("💡 Data refreshes every 5 minutes")
+        if not events_data:
+            st.warning("No events found for this conference")
+            return
             
-    def show_loading_spinner(self):
-        """Show loading animation"""
-        with st.spinner("Loading dashboard data..."):
-            time.sleep(0.5)  # Brief pause for UX
-
-    def render_metrics(self, df):
-        """Render summary metrics"""
-        st.header("📊 Events Overview")
-        metrics_cols = st.columns(4)
+        # Create DataFrame
+        df = pd.DataFrame(events_data)
+        df['attendance_percentage'] = (df['totalAttendees'] / max_capacity * 100).round(2)
         
-        with metrics_cols[0]:
+        # Summary metrics
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
             st.metric("Total Events", len(df))
-        with metrics_cols[1]:
+        with col2:
             st.metric("Average Attendance", f"{df['totalAttendees'].mean():.1f}")
-        with metrics_cols[2]:
+        with col3:
             st.metric("Total Attendees", df['totalAttendees'].sum())
-        with metrics_cols[3]:
-            st.metric(
-                "Highest Attendance",
-                df['totalAttendees'].max(),
-                delta=f"{df['totalAttendees'].max() - df['totalAttendees'].mean():.1f} vs avg"
-            )
-
-    def render_attendance_chart(self, df):
-        """Render attendance bar chart"""
-        st.header("📈 Attendance by Event")
+        with col4:
+            st.metric("Highest Attendance", df['totalAttendees'].max())
         
-        # Calculate attendance percentages
-        df['attendance_percentage'] = (df['totalAttendees'] / st.session_state.max_attendees * 100).round(2)
-        
-        fig = px.bar(
-            df,
-            x='title',
-            y='attendance_percentage',
-            title='Event Attendance Percentages',
-            labels={'title': 'Event Title', 'attendance_percentage': 'Attendance %'},
-            text='attendance_percentage',
-            color='attendance_percentage',
-            color_continuous_scale='RdYlGn'
+        # Events bar chart using st.bar_chart
+        st.header("Event Attendance")
+        st.bar_chart(
+            data=df.set_index('title')['attendance_percentage'],
+            use_container_width=True
         )
         
-        fig.update_traces(
-            texttemplate='%{text:.1f}%',
-            textposition='outside'
-        )
-        fig.update_layout(
-            yaxis_range=[0, 100],
-            height=500,
-            xaxis_tickangle=-45
-        )
+        # Detailed table
+        st.header("Event Details")
         
-        st.plotly_chart(fig, use_container_width=True)
-
-    def render_events_table(self, df):
-        """Render detailed events table"""
-        st.header("📋 Event Details")
-        
-        # Format datetime if it's a string
+        # Format datetime
         df['formatted_time'] = pd.to_datetime(df['time']).dt.strftime('%Y-%m-%d %H:%M')
         
-        # Prepare table data
-        table_data = df[[
-            'title', 'formatted_time', 'venue',
-            'totalAttendees', 'attendance_percentage'
-        ]].copy()
-        
-        table_data = table_data.rename(columns={
-            'title': 'Event Title',
-            'formatted_time': 'Time',
-            'venue': 'Venue',
-            'totalAttendees': 'Total Attendees',
-            'attendance_percentage': 'Attendance %'
-        })
-        
-        table_data['Attendance %'] = table_data['Attendance %'].apply(lambda x: f"{x:.1f}%")
-        
+        # Display table
         st.dataframe(
-            table_data,
-            column_config={
-                "Event Title": st.column_config.TextColumn(width="large"),
-                "Time": st.column_config.TextColumn(width="medium"),
-                "Venue": st.column_config.TextColumn(width="medium"),
-            },
+            df[['title', 'formatted_time', 'venue', 'totalAttendees', 'attendance_percentage']].rename(columns={
+                'title': 'Event Title',
+                'formatted_time': 'Time',
+                'venue': 'Venue',
+                'totalAttendees': 'Total Attendees',
+                'attendance_percentage': 'Attendance %'
+            }).assign(**{
+                'Attendance %': lambda x: x['attendance_percentage'].apply(format_percentage)
+            }).drop(columns=['attendance_percentage']),
             hide_index=True,
-            height=400
-        )
-
-    def render_gauge_chart(self, df):
-        """Render overall attendance gauge"""
-        st.header("🎯 Overall Attendance Status")
-        
-        total_attendance_percentage = (
-            df['totalAttendees'].sum() / 
-            (st.session_state.max_attendees * len(df)) * 
-            100
+            use_container_width=True
         )
         
-        gauge = go.Figure(go.Indicator(
-            mode="gauge+number+delta",
-            value=total_attendance_percentage,
-            domain={'x': [0, 1], 'y': [0, 1]},
-            title={'text': "Overall Attendance Percentage"},
-            delta={'reference': 80},
-            gauge={
-                'axis': {'range': [0, 100]},
-                'bar': {'color': "darkblue"},
-                'steps': [
-                    {'range': [0, 30], 'color': "lightcoral"},
-                    {'range': [30, 70], 'color': "khaki"},
-                    {'range': [70, 100], 'color': "lightgreen"}
-                ],
-                'threshold': {
-                    'line': {'color': "red", 'width': 4},
-                    'thickness': 0.75,
-                    'value': 80
-                }
-            }
-        ))
+        # Overall attendance status
+        st.header("Overall Attendance Status")
+        overall_percentage = (df['totalAttendees'].sum() / (max_capacity * len(df)) * 100)
+        st.progress(min(overall_percentage / 100, 1.0))
+        st.write(f"Overall attendance: {format_percentage(overall_percentage)}")
         
-        gauge.update_layout(height=400)
-        st.plotly_chart(gauge, use_container_width=True)
-
-    def render_download_button(self, df):
-        """Render data download option"""
+        # Download option
         st.download_button(
-            label="📥 Download Event Data (CSV)",
+            label="Download Event Data (CSV)",
             data=df.to_csv(index=False),
             file_name=f"event_attendance_{datetime.now().strftime('%Y%m%d')}.csv",
-            mime="text/csv",
+            mime="text/csv"
         )
 
-def main():
-    # Initialize dashboard UI
-    dashboard = DashboardUI()
-    
-    # Set up API connection
-    conference_code = st.session_state.get('current_user', 'DP2024')
-    api_base = f"https://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard"
-    api = ConferenceAPI(api_base, conference_code)
-    
-    # Show loading state
-    dashboard.show_loading_spinner()
-    
-    # Fetch data
-    total_attendees, attendees = api.fetch_attendees()
-    events_data = api.fetch_events()
-    
-    if not events_data:
-        st.warning("⚠️ No events found for this conference")
-        return
-        
-    # Create DataFrame
-    df = pd.DataFrame(events_data)
-    
-    # Render dashboard components
-    dashboard.render_metrics(df)
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        dashboard.render_attendance_chart(df)
-    with col2:
-        dashboard.render_gauge_chart(df)
-        
-    dashboard.render_events_table(df)
-    dashboard.render_download_button(df)
-
 if __name__ == "__main__":
-    main()
+    st.set_page_config(
+        page_title="Event Attendance Dashboard",
+        page_icon="📊",
+        layout="wide"
+    )
+    main_event_attendance()
