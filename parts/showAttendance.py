@@ -166,7 +166,7 @@ def main_show_attendance():
         with col1:
             st.markdown(f"""
                 <div class="section-not-attended">
-                    <h3>📝 Not Attended ({false_count})</h3>
+                    <h3>❌ Not Attended ({false_count})</h3>
                 </div>
             """, unsafe_allow_html=True)
             
