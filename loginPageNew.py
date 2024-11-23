@@ -74,6 +74,7 @@ def login(conference_code, password):
 
 
 
+
 def show_login_page():
     """Display login form"""
     st.title("Conference Login")
@@ -100,6 +101,7 @@ def show_login_page():
 
 
 
+
 def show_signup_page():
     """Display signup form"""
     st.title("Create Conference Account")
@@ -114,7 +116,7 @@ def show_signup_page():
         password = st.text_input("Password", type="password")
         confirm_password = st.text_input("Confirm Password", type="password")
         options = ["Option 1", "Option 2", "Option 3"]
-        selected_option = st.selectbox("Choose an option:", options)
+        # selected_option = st.selectbox("Choose an option:", options)
         
         
         submit_button = st.form_submit_button("Create Account")
