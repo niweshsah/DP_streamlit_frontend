@@ -12,6 +12,11 @@ import os
 import json
 import logging
 
+rest_api_url = os.getenv("REST_API_URL")
+visiting_card_url = os.getenv("VISITING_CARD_URL")
+sender_email = os.getenv("EMAIL")
+sender_password = os.getenv("EMAIL_PASSWORD")
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,7 +24,7 @@ logger = logging.getLogger(__name__)
 def send_qr_code_email(name, email, mobile, designation, organization, location, linkedin, about, conference_code):
     try:
         # Create QR Code Data
-        qr_data = f"https://niweshvistingcard.streamlit.app/?email={email}&confcode={conference_code}"
+        qr_data = f"{visiting_card_url}/?email={email}&confcode={conference_code}"
         
         # Generate QR Code
         qr = qrcode.QRCode(
@@ -64,7 +69,9 @@ GatherHub Team"""
         return False, f"Failed to send email: {str(e)}"
 
 def submit_data(data, conference_code):
-    post_url = f"https://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/acceptedInvitation"
+    
+    post_url = f"{rest_api_url}/user/conference/{conference_code}/eventCard/acceptedInvitation"
+    
     
     try:
         logger.info(f"Submitting data to {post_url}")
