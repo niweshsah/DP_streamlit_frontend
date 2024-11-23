@@ -294,81 +294,9 @@ def post_selected_attendees(url: str, selected_attendees: List[Dict]) -> Tuple[b
         logger.error(error_msg)
         return False, error_msg
 
-# def send_email_to_attendees(attendees: List[Dict], smtp_config: Dict) -> Tuple[bool, str, List[str]]:
-#     """
-#     Send confirmation emails to attendees with comprehensive error handling.
-    
-#     Args:
-#         attendees: List of attendee dictionaries
-#         smtp_config: SMTP server configuration
-        
-#     Returns:
-#         Tuple[bool, str, List[str]]: (Success status, Error message, List of failed email addresses)
-#     """
-#     failed_emails = []
-#     server = None
-    
-#     try:
-#         # Connect to SMTP server
-#         server = smtplib.SMTP(smtp_config['server'], smtp_config['port'])
-#         server.starttls()
-#         server.login(smtp_config['email'], smtp_config['password'])
-        
-#         for attendee in attendees:
-#             try:
-#                 recipient_email = attendee["email"]
-#                 subject = "🎉 Registration Confirmation"
-#                 body = f"""
-# Hello {attendee['name']},
-
-# This is Group 0's project for the course IC-202P. This email is part of our project: **Conference Management System**.
-
-# Attendance will be marked based on the email sent to you. Please make sure to attend the conference. You are requested to fill in your details at the provided link:
-
-# [Click here to fill your details](https://niweshvistingcardposting.streamlit.app/?email={recipient_email}&conference_code=DP2024)
-
-# If you face any issues, kindly contact me at:
-# - **Name:** Niwesh Sah  
-# - **Mobile:** 9451864348  
-# - **Roll No.:** B23277  
-
-# Best regards,  
-# **GatherHub Team**
-#                 """
-
-#                 msg = MIMEMultipart()
-#                 msg["From"] = smtp_config['email']
-#                 msg["To"] = recipient_email
-#                 msg["Subject"] = subject
-#                 msg.attach(MIMEText(body, "plain"))
-
-#                 server.sendmail(smtp_config['email'], recipient_email, msg.as_string())
-#                 logger.info(f"Successfully sent email to {recipient_email}")
-                
-#             except Exception as e:
-#                 logger.error(f"Failed to send email to {recipient_email}: {str(e)}")
-#                 failed_emails.append(recipient_email)
-
-#     except smtplib.SMTPAuthenticationError:
-#         return False, "SMTP authentication failed. Please check your credentials.", failed_emails
-#     except smtplib.SMTPException as e:
-#         return False, f"SMTP error occurred: {str(e)}", failed_emails
-#     except Exception as e:
-#         return False, f"Unexpected error sending emails: {str(e)}", failed_emails
-#     finally:
-#         if server:
-#             try:
-#                 server.quit()
-#             except Exception as e:
-#                 logger.error(f"Error closing SMTP connection: {str(e)}")
-
-#     if failed_emails:
-#         return False, f"Failed to send emails to {len(failed_emails)} recipients", failed_emails
-#     return True, "", []
-
 def send_email_to_attendees(attendees: List[Dict], smtp_config: Dict) -> Tuple[bool, str, List[str]]:
     """
-    Send beautifully formatted confirmation emails to attendees with comprehensive error handling.
+    Send confirmation emails to attendees with comprehensive error handling.
     
     Args:
         attendees: List of attendee dictionaries
@@ -380,93 +308,6 @@ def send_email_to_attendees(attendees: List[Dict], smtp_config: Dict) -> Tuple[b
     failed_emails = []
     server = None
     
-    html_template = """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Conference Registration Confirmation</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                line-height: 1.6;
-                color: #333333;
-                max-width: 600px;
-                margin: 0 auto;
-                padding: 20px;
-            }
-            .header {
-                background-color: #4A90E2;
-                color: white;
-                padding: 30px;
-                text-align: center;
-                border-radius: 8px 8px 0 0;
-            }
-            .content {
-                background-color: #ffffff;
-                padding: 30px;
-                border: 1px solid #e1e1e1;
-                border-radius: 0 0 8px 8px;
-            }
-            .button {
-                display: inline-block;
-                padding: 12px 24px;
-                background-color: #4CAF50;
-                color: white;
-                text-decoration: none;
-                border-radius: 4px;
-                margin: 20px 0;
-            }
-            .contact-info {
-                background-color: #f9f9f9;
-                padding: 20px;
-                border-radius: 4px;
-                margin-top: 20px;
-            }
-            .footer {
-                text-align: center;
-                margin-top: 30px;
-                color: #666666;
-                font-size: 14px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="header">
-            <h1>🎉 Welcome to the Conference!</h1>
-        </div>
-        <div class="content">
-            <p>Dear {name},</p>
-            
-            <p>Thank you for registering for the IC-202P Conference! This email is part of Group 0's Conference Management System project.</p>
-            
-            <p><strong>Important:</strong> Your attendance will be marked based on this registration. Please ensure you complete the following steps:</p>
-            
-            <p style="text-align: center;">
-                <a href="https://niweshvistingcardposting.streamlit.app/?email={email}&conference_code=DP2024" class="button">
-                    Complete Your Registration Details
-                </a>
-            </p>
-            
-            <div class="contact-info">
-                <h3>Need Assistance?</h3>
-                <p>Please don't hesitate to contact our team lead:</p>
-                <ul style="list-style-type: none; padding-left: 0;">
-                    <li><strong>Name:</strong> Niwesh Sah</li>
-                    <li><strong>Mobile:</strong> 9451864348</li>
-                    <li><strong>Roll No.:</strong> B23277</li>
-                </ul>
-            </div>
-            
-            <div class="footer">
-                <p>Best regards,<br><strong>GatherHub Team</strong></p>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
-    
     try:
         # Connect to SMTP server
         server = smtplib.SMTP(smtp_config['server'], smtp_config['port'])
@@ -476,61 +317,229 @@ def send_email_to_attendees(attendees: List[Dict], smtp_config: Dict) -> Tuple[b
         for attendee in attendees:
             try:
                 recipient_email = attendee["email"]
-                subject = "🎉 Conference Registration Confirmation"
-                
-                # Create message container
-                msg = MIMEMultipart('alternative')
+                subject = "🎉 Registration Confirmation"
+                body = f"""
+Hello {attendee['name']},
+
+This is Group 0's project for the course IC-202P. This email is part of our project: **Conference Management System**.
+
+Attendance will be marked based on the email sent to you. Please make sure to attend the conference. You are requested to fill in your details at the provided link:
+
+[Click here to fill your details](https://niweshvistingcardposting.streamlit.app/?email={recipient_email}&conference_code=DP2024)
+
+If you face any issues, kindly contact me at:
+- **Name:** Niwesh Sah  
+- **Mobile:** 9451864348  
+- **Roll No.:** B23277  
+
+Best regards,  
+**GatherHub Team**
+                """
+
+                msg = MIMEMultipart()
                 msg["From"] = smtp_config['email']
                 msg["To"] = recipient_email
                 msg["Subject"] = subject
-                
-                # Create both plain-text and HTML versions of the message
-                text_content = f"""
-Hello {attendee['name']},
+                msg.attach(MIMEText(body, "plain"))
 
-Thank you for registering for the IC-202P Conference! This email is part of our Conference Management System project.
-
-Please complete your registration details at:
-https://niweshvistingcardposting.streamlit.app/?email={recipient_email}&conference_code=DP2024
-
-Need help? Contact Niwesh Sah (Roll No. B23277) at 9451864348.
-
-Best regards,
-GatherHub Team
-                """
-                
-                # Substitute attendee details into HTML template
-                html_content = html_template.format(
-                    name=attendee['name'],
-                    email=recipient_email
-                )
-                
-                # Attach both versions
-                part1 = MIMEText(text_content, 'plain')
-                part2 = MIMEText(html_content, 'html')
-                msg.attach(part1)
-                msg.attach(part2)
-                
                 server.sendmail(smtp_config['email'], recipient_email, msg.as_string())
                 logger.info(f"Successfully sent email to {recipient_email}")
                 
             except Exception as e:
                 logger.error(f"Failed to send email to {recipient_email}: {str(e)}")
                 failed_emails.append(recipient_email)
-                
+
+    except smtplib.SMTPAuthenticationError:
+        return False, "SMTP authentication failed. Please check your credentials.", failed_emails
+    except smtplib.SMTPException as e:
+        return False, f"SMTP error occurred: {str(e)}", failed_emails
     except Exception as e:
-        error_msg = f"Email sending error: {str(e)}"
-        logger.error(error_msg)
-        return False, error_msg, failed_emails
-        
+        return False, f"Unexpected error sending emails: {str(e)}", failed_emails
     finally:
         if server:
-            server.quit()
-            
+            try:
+                server.quit()
+            except Exception as e:
+                logger.error(f"Error closing SMTP connection: {str(e)}")
+
     if failed_emails:
         return False, f"Failed to send emails to {len(failed_emails)} recipients", failed_emails
-    
     return True, "", []
+
+
+
+
+
+
+
+
+
+
+# def send_email_to_attendees(attendees: List[Dict], smtp_config: Dict) -> Tuple[bool, str, List[str]]:
+#     """
+#     Send beautifully formatted confirmation emails to attendees with comprehensive error handling.
+    
+#     Args:
+#         attendees: List of attendee dictionaries
+#         smtp_config: SMTP server configuration
+        
+#     Returns:
+#         Tuple[bool, str, List[str]]: (Success status, Error message, List of failed email addresses)
+#     """
+#     failed_emails = []
+#     server = None
+    
+#     html_template = """
+#     <!DOCTYPE html>
+#     <html>
+#     <head>
+#         <meta charset="utf-8">
+#         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+#         <title>Conference Registration Confirmation</title>
+#         <style>
+#             body {
+#                 font-family: Arial, sans-serif;
+#                 line-height: 1.6;
+#                 color: #333333;
+#                 max-width: 600px;
+#                 margin: 0 auto;
+#                 padding: 20px;
+#             }
+#             .header {
+#                 background-color: #4A90E2;
+#                 color: white;
+#                 padding: 30px;
+#                 text-align: center;
+#                 border-radius: 8px 8px 0 0;
+#             }
+#             .content {
+#                 background-color: #ffffff;
+#                 padding: 30px;
+#                 border: 1px solid #e1e1e1;
+#                 border-radius: 0 0 8px 8px;
+#             }
+#             .button {
+#                 display: inline-block;
+#                 padding: 12px 24px;
+#                 background-color: #4CAF50;
+#                 color: white;
+#                 text-decoration: none;
+#                 border-radius: 4px;
+#                 margin: 20px 0;
+#             }
+#             .contact-info {
+#                 background-color: #f9f9f9;
+#                 padding: 20px;
+#                 border-radius: 4px;
+#                 margin-top: 20px;
+#             }
+#             .footer {
+#                 text-align: center;
+#                 margin-top: 30px;
+#                 color: #666666;
+#                 font-size: 14px;
+#             }
+#         </style>
+#     </head>
+#     <body>
+#         <div class="header">
+#             <h1>🎉 Welcome to the Conference!</h1>
+#         </div>
+#         <div class="content">
+#             <p>Dear {name},</p>
+            
+#             <p>Thank you for registering for the IC-202P Conference! This email is part of Group 0's Conference Management System project.</p>
+            
+#             <p><strong>Important:</strong> Your attendance will be marked based on this registration. Please ensure you complete the following steps:</p>
+            
+#             <p style="text-align: center;">
+#                 <a href="https://niweshvistingcardposting.streamlit.app/?email={email}&conference_code=DP2024" class="button">
+#                     Complete Your Registration Details
+#                 </a>
+#             </p>
+            
+#             <div class="contact-info">
+#                 <h3>Need Assistance?</h3>
+#                 <p>Please don't hesitate to contact our team lead:</p>
+#                 <ul style="list-style-type: none; padding-left: 0;">
+#                     <li><strong>Name:</strong> Niwesh Sah</li>
+#                     <li><strong>Mobile:</strong> 9451864348</li>
+#                     <li><strong>Roll No.:</strong> B23277</li>
+#                 </ul>
+#             </div>
+            
+#             <div class="footer">
+#                 <p>Best regards,<br><strong>GatherHub Team</strong></p>
+#             </div>
+#         </div>
+#     </body>
+#     </html>
+#     """
+    
+#     try:
+#         # Connect to SMTP server
+#         server = smtplib.SMTP(smtp_config['server'], smtp_config['port'])
+#         server.starttls()
+#         server.login(smtp_config['email'], smtp_config['password'])
+        
+#         for attendee in attendees:
+#             try:
+#                 recipient_email = attendee["email"]
+#                 subject = "🎉 Conference Registration Confirmation"
+                
+#                 # Create message container
+#                 msg = MIMEMultipart('alternative')
+#                 msg["From"] = smtp_config['email']
+#                 msg["To"] = recipient_email
+#                 msg["Subject"] = subject
+                
+#                 # Create both plain-text and HTML versions of the message
+#                 text_content = f"""
+# Hello {attendee['name']},
+
+# Thank you for registering for the IC-202P Conference! This email is part of our Conference Management System project.
+
+# Please complete your registration details at:
+# https://niweshvistingcardposting.streamlit.app/?email={recipient_email}&conference_code=DP2024
+
+# Need help? Contact Niwesh Sah (Roll No. B23277) at 9451864348.
+
+# Best regards,
+# GatherHub Team
+#                 """
+                
+#                 # Substitute attendee details into HTML template
+#                 html_content = html_template.format(
+#                     name=attendee['name'],
+#                     email=recipient_email
+#                 )
+                
+#                 # Attach both versions
+#                 part1 = MIMEText(text_content, 'plain')
+#                 part2 = MIMEText(html_content, 'html')
+#                 msg.attach(part1)
+#                 msg.attach(part2)
+                
+#                 server.sendmail(smtp_config['email'], recipient_email, msg.as_string())
+#                 logger.info(f"Successfully sent email to {recipient_email}")
+                
+#             except Exception as e:
+#                 logger.error(f"Failed to send email to {recipient_email}: {str(e)}")
+#                 failed_emails.append(recipient_email)
+                
+#     except Exception as e:
+#         error_msg = f"Email sending error: {str(e)}"
+#         logger.error(error_msg)
+#         return False, error_msg, failed_emails
+        
+#     finally:
+#         if server:
+#             server.quit()
+            
+#     if failed_emails:
+#         return False, f"Failed to send emails to {len(failed_emails)} recipients", failed_emails
+    
+#     return True, "", []
 
 def main_attendee_csv():
     st.title("🎉 Conference Attendee Management 🎉")
