@@ -4,6 +4,9 @@ import json
 from datetime import datetime
 from home import main_home
 from home2_via_email import main_home2
+import os
+
+rest_api_url = os.getenv("REST_API_URL")
 
 # Configure page settings
 # st.set_page_config(page_title="Conference Login System", layout="centered")
@@ -18,8 +21,10 @@ if 'current_user' not in st.session_state:
 
 
 # API endpoints
-BASE_URL = "https://gatherhub-r7yr.onrender.com/user/conference/"  # Replace with your actual API base URL
+BASE_URL = f"{rest_api_url}/user/conference/"  # Replace with your actual API base URL
+
 # BASE_URL = "http://localhost:27017/user/conference/"  # Replace with your actual API base URL
+
 ENDPOINTS = {
     'login': f"{BASE_URL}/login",
     'create_account': f"{BASE_URL}/createNewConference",
