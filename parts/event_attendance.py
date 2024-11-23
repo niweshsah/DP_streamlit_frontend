@@ -387,14 +387,14 @@ def main_event_attendance():
     conference_code = st.session_state.get('current_user', 'DP2024')
     
     # Add settings in sidebar
-    with st.sidebar:
-        st.title("Dashboard Settings")
-        max_capacity = st.number_input(
-            "Maximum Attendees per Event",
-            min_value=10,
-            max_value=1000,
-            value=100
-        )
+    # with st.sidebar:
+    #     st.title("Dashboard Settings")
+    #     max_capacity = st.number_input(
+    #         "Maximum Attendees per Event",
+    #         min_value=10,
+    #         max_value=1000,
+    #         value=100
+    #     )
     
     # Load data
     with st.spinner("Loading dashboard data..."):
@@ -408,7 +408,7 @@ def main_event_attendance():
         df = pd.DataFrame(events_data)
         
         # Calculate attendance percentage
-        df['attendance_percentage'] = (df['totalAttendees'] / max_capacity * 100).round(1)
+        df['attendance_percentage'] = (df['totalAttendees'] / total_attendees * 100).round(1)
         
         # Format time
         df['formatted_time'] = pd.to_datetime(df['time']).dt.strftime('%Y-%m-%d %H:%M')
