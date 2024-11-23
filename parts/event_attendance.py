@@ -454,7 +454,7 @@ def main_event_attendance():
         
         # Overall attendance status
         st.header("Overall Attendance Status")
-        overall_percentage = (df['totalAttendees'].sum() / (max_capacity * len(df)) * 100)
+        overall_percentage = (df['totalAttendees'].sum() / (total_attendees * len(df)) * 100)
         st.progress(min(overall_percentage / 100, 1.0))
         st.write(f"Overall attendance: {overall_percentage:.1f}%")
         
