@@ -174,7 +174,6 @@ def main_attendance_accepted():
                         <div class="stat-label">Acceptance Rate</div>
                     </div>
         
-                </div>
             </div>
         """.format(attendee_total_count, attendee_accepted_count, acceptance_rate), unsafe_allow_html=True)
 
