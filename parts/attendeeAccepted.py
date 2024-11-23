@@ -321,25 +321,29 @@ def main_attendance_accepted():
         
         ATTENDEES_TRUE_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/attendees-true"
         
+        BUSS_CARD_URL = f"http://gatherhub-r7yr.onrender.com/user/conference/{conference_code}/eventCard/get-business-card2"
+        
         
 
         # Fetch data
         attendee_total_count, attendee_total = fetch_attendees(ATTENDEES_TOTAL_URL, conference_code)
         
-        attendee_not_accepted_count, attendee_not_accepted = fetch_attendees(ATTENDEES_FALSE_URL, conference_code)
+        # attendee_not_accepted_count, attendee_not_accepted = fetch_attendees(ATTENDEES_FALSE_URL, conference_code)
         
-        attendee_accepted_count, attendee_accepted = fetch_attendees(ATTENDEES_TRUE_URL, conference_code)
+        # attendee_accepted_count, attendee_accepted = fetch_attendees(ATTENDEES_TRUE_URL, conference_code)
+        
+        attendee_accepted_count, attendee_accepted = fetch_attendees(BUSS_CARD_URL, conference_code)
 
         # Calculate statistics
-        total_attendees = attendee_total_count
-        total_responded = attendee_accepted_count + attendee_not_accepted_count
+        # total_attendees = attendee_total_count
+        # total_responded = attendee_accepted_count + attendee_not_accepted_count
         
-        print(total_responded)
+        # print(total_responded)
 
         # Calculate rates
-        if total_attendees > 0:
-            acceptance_rate = (total_responded / total_attendees) * 100
-            attendance_rate = (total_responded / total_attendees) * 100
+        if attendee_total_count > 0:
+            acceptance_rate = (attendee_accepted_count / attendee_total_count) * 100
+            attendance_rate = (attendee_accepted_count / attendee_total_count) * 100
         else:
             acceptance_rate = 0
             attendance_rate = 0
@@ -366,7 +370,7 @@ def main_attendance_accepted():
                     </div>
                 </div>
             </div>
-        """.format(total_attendees, attendee_accepted_count, acceptance_rate, attendance_rate), unsafe_allow_html=True)
+        """.format(attendee_total_count, attendee_accepted_count, acceptance_rate, attendance_rate), unsafe_allow_html=True)
 
         # Display attendees in columns
         col1, col2 = st.columns(2)
@@ -374,13 +378,13 @@ def main_attendance_accepted():
         with col1:
             st.markdown(f"""
                 <div class="section-attendee invited">
-                    <h3>📝 Not Responded ({attendee_total_count - total_responded})</h3>
+                    <h3>📝 Not Responded ({attendee_total_count - attendee_total_count})</h3>
                 </div>
             """, unsafe_allow_html=True)
             
-            for attendee in attendee_total:
-                if attendee not in attendee_accepted and attendee not in attendee_not_accepted:
-                    st.markdown(create_attendee_card(attendee), unsafe_allow_html=True)
+            # for attendee in attendee_total:
+            #     if attendee not in attendee_accepted and attendee not in attendee_not_accepted:
+            #         st.markdown(create_attendee_card(attendee), unsafe_allow_html=True)
 
         with col2:
             st.markdown(f"""
@@ -398,8 +402,8 @@ def main_attendance_accepted():
             #     </div>
             # """, unsafe_allow_html=True)
             
-            for attendee in attendee_not_accepted:
-                st.markdown(create_attendee_card(attendee), unsafe_allow_html=True)
+            # for attendee in attendee_not_accepted:
+            #     st.markdown(create_attendee_card(attendee), unsafe_allow_html=True)
 
     else:
         st.info("👋 Please enter a conference code to view attendance.")
