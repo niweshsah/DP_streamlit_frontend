@@ -392,11 +392,11 @@ def main_attendance_accepted():
             for attendee in attendee_accepted:
                 st.markdown(create_attendee_card(attendee), unsafe_allow_html=True)
 
-            st.markdown(f"""
-                <div class="section-attendee declined">
-                    <h3>❌ Declined ({attendee_not_accepted_count})</h3>
-                </div>
-            """, unsafe_allow_html=True)
+            # st.markdown(f"""
+            #     <div class="section-attendee declined">
+            #         <h3>❌ Declined ({attendee_not_accepted_count})</h3>
+            #     </div>
+            # """, unsafe_allow_html=True)
             
             for attendee in attendee_not_accepted:
                 st.markdown(create_attendee_card(attendee), unsafe_allow_html=True)
