@@ -36,8 +36,11 @@ def send_qr_code_email(name, email, mobile, designation, organization, location,
         img.save(buf)
         buf.seek(0)
         
-        sender_email = "gatherhubiitmandi@gmail.com"
-        sender_password = "armf odpa unrp vkjz"
+        sender_email = "www.niweshsah@gmail.com"
+        # sender_email = "gatherhubiitmandi@gmail.com"
+        
+        # sender_password = "armf odpa unrp vkjz"
+        sender_password = "pcme hjjz cgdb jyvs"
         subject = "Your Personalized  QR Code"
         body = f"""Dear {name},
 

@@ -192,6 +192,7 @@ import logging
 from datetime import datetime
 import re
 
+
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
@@ -255,6 +256,7 @@ def validate_csv_data(df: pd.DataFrame) -> Tuple[bool, str]:
     except Exception as e:
         logger.error(f"Error validating CSV data: {str(e)}")
         return False, f"Error validating CSV data: {str(e)}"
+
 
 def post_selected_attendees(url: str, selected_attendees: List[Dict]) -> Tuple[bool, str]:
     """
@@ -559,8 +561,10 @@ def main_attendee_csv():
     smtp_config = {
         'server': "smtp.gmail.com",
         'port': 587,
-        'email': "sahniwesh@gmail.com",
-        'password': "poqo fznf wprs kmru"
+        # 'email': "sahniwesh@gmail.com",
+        'email': "gatherhubniwesh@gmail.com",
+        # 'password': "poqo fznf wprs kmru"
+        'password': "oehq tyjg jsmz nvrr"
     }
 
     # File upload section
