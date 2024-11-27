@@ -290,16 +290,42 @@ import streamlit as st
 import requests
 import base64
 import pandas as pd
+from PIL import Image
+from io import BytesIO
 
 # Backend Base URL (replace with your actual backend API URL)
 # BASE_URL = "http://gatherhub-r7yr.onrender.com/user/conference/DP2024/groups/"
 BASE_URL = "http://localhost:27017/user/conference/DP2024"
 # Helper function to convert images to base64
 
-def image_to_base64(image):
+
+def image_to_base64(image, max_width=500, max_height=500, quality=85):
+    """
+    Convert an image to a Base64 string with optional resizing and compression.
+
+    Args:
+        image: File-like object (e.g., an uploaded image).
+        max_width: Maximum width for resizing (default: 500 pixels).
+        max_height: Maximum height for resizing (default: 500 pixels).
+        quality: Compression quality (1-100) for JPEG/WebP (default: 85).
+
+    Returns:
+        str: Base64-encoded string of the processed image.
+    """
     if image is not None:
-        img_bytes = image.read()
-        return base64.b64encode(img_bytes).decode('utf-8')
+        # Open the image using PIL
+        img = Image.open(image)
+
+        # Resize the image while maintaining aspect ratio
+        img.thumbnail((max_width, max_height))
+
+        # Convert the image to a compressed format (JPEG/WebP)
+        buffer = BytesIO()
+        img.save(buffer, format="JPEG", quality=quality)
+        buffer.seek(0)
+
+        # Encode the image to Base64
+        return base64.b64encode(buffer.getvalue()).decode('utf-8')
     return None
 
 # Main App Function
