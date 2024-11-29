@@ -3,6 +3,7 @@ import streamlit as st
 import requests
 import base64
 
+
 def image_to_base64(image):
     """Convert uploaded image to base64 string."""
     if image is not None:
@@ -11,6 +12,9 @@ def image_to_base64(image):
         # Encode to base64
         return base64.b64encode(img_bytes).decode('utf-8')
     return None
+
+
+
 
 def main():
     st.title("Group Details Submission")
@@ -36,10 +40,12 @@ def main():
         if faculty_name:
             faculty_members.append(faculty_name)
 
+
     # Image upload
     uploaded_images = st.file_uploader("Upload Group Images", 
                                        type=['png', 'jpg', 'jpeg'], 
                                        accept_multiple_files=True)
+
 
 
     # Member details
@@ -52,12 +58,14 @@ def main():
         name = st.text_input(f"Member {i+1} Name")
         roll_no = st.text_input(f"Member {i+1} Roll Number")
         contribution = st.text_area(f"Member {i+1} Contribution")
+      
         
         members.append({
             "name": name,
             "roll_no": roll_no,
             "contribution": contribution
         })
+
 
     # Submission button
     if st.button("Submit Group Details"):
@@ -66,6 +74,7 @@ def main():
             st.error("Please fill in all required fields")
             return
 
+
         # Prepare image data
         image_data = []
         if uploaded_images:
@@ -73,6 +82,8 @@ def main():
                 base64_img = image_to_base64(img)
                 if base64_img:
                     image_data.append(base64_img)
+
+
 
 
         # Prepare payload to match the mongoose schema
@@ -104,6 +115,7 @@ def main():
 
         except requests.exceptions.RequestException as e:
             st.error(f"Error submitting group details: {e}")
+
 
 if __name__ == "__main__":
     main()
