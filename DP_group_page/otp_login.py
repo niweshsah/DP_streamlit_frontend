@@ -540,8 +540,8 @@ if st.button("✅ Verify OTP", type="secondary"):
         st.error("Invalid OTP. Please try again.")
 
 
-# Submit section
-st.markdown('<div class="section-header">Create Business Card</div>', unsafe_allow_html=True)
+    # Submit section
+    st.markdown('<div class="section-header">Create Business Card</div>', unsafe_allow_html=True)
 
 if st.button("🎉 Create Business Card", type="primary"):
     # if not all([name, email, mobile]):

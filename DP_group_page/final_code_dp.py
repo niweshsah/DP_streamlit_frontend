@@ -288,10 +288,23 @@ class GroupSubmissionApp:
         
         # Image Upload
         st.subheader("🖼️ Project Images")
-        uploaded_images = st.file_uploader("Upload Group Images", type=['png', 'jpg', 'jpeg'], accept_multiple_files=True, 
-                                           help="Upload project-related images (Optional)")
-        image_data = [self.image_to_base64(img) for img in uploaded_images] if uploaded_images else []
-        
+        uploaded_images = st.file_uploader(
+            "Upload Group Images (It is recommended to compress them before uploading)",
+            type=['png', 'jpg', 'jpeg'],
+            accept_multiple_files=True,
+            help="Upload project-related images (Optional)"
+        )
+
+        image_data = []
+        if uploaded_images:
+            for img in uploaded_images:
+                if img.size > 1 * 1024 * 1024:  # Check if file size exceeds 1 MB
+                    st.error(f"❌ {img.name} is larger than 1 MB. Please compress and upload again.")
+                else:
+                    base64_img = self.image_to_base64(img)
+                    if base64_img:
+                        image_data.append(base64_img)
+                
         # Email Verification Section
         st.subheader("🔒 Email Verification")
         email = st.text_input("Enter Your Email for Verification", help="Enter your email to receive OTP")
