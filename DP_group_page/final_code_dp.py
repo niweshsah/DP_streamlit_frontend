@@ -136,10 +136,10 @@ class GroupSubmissionApp:
         """, unsafe_allow_html=True)
 
     def validate_email(self, email):
-        """Validate email format"""
+        # """Validate email format"""
         # email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         
-        """Validate email format and restrict to iitmandi.ac.in domain."""
+        # """Validate email format and restrict to iitmandi.ac.in domain."""
         email_regex = r'^[a-zA-Z0-9._%+-]+@students.iitmandi\.ac\.in$'
         
         return re.match(email_regex, email) is not None
