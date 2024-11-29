@@ -220,8 +220,6 @@ map_base64 = '/9j/4AAQSkZJRgABAQEAcwBzAAD//gBBRGVzY3JpcHRpb246IENyZWF0aW9uIFRpbW
 
 
 
-
-
 import streamlit as st
 import requests
 import base64
@@ -234,7 +232,6 @@ BASE_URL = 'https://gatherhub-r7yr.onrender.com/user/conference/DP2024'
 PROJECT_DATA_URL = f'{BASE_URL}/groups/'
 
 # IMPORTANT: Replace this with your actual base64-encoded map image
-# Example: map_base64 = '/9j/4AAQSkZJRgABAQEA...'  # Your base64 string here
 # map_base64 = ''  # Placeholder - must be replaced with actual base64 image string
 
 
@@ -336,6 +333,7 @@ class GatherHubApp:
 
         images = project.get('image', [])
         if images:
+            # Get current image index from session state
             current_image_index = st.session_state.project_images_index[project_index]
             current_image = self.decode_base64_image(images[current_image_index])
             
@@ -345,21 +343,24 @@ class GatherHubApp:
             # Image navigation
             col1, col2, col3 = st.columns([1, 1, 1])
             with col1:
-                if st.button("← Previous Image"):
-                    # Go to previous image, wrap around to last if at first image
-                    current_image_index = (current_image_index - 1) % len(images)
-                    st.session_state.project_images_index[project_index] = current_image_index
-                    st.rerun()
+                prev_image = st.button("← Previous Image")
+
+            with col3:
+                next_image = st.button("Next Image →")
+
+            # Handle image navigation outside of the column blocks
+            if prev_image:
+                current_image_index = (current_image_index - 1) % len(images)
+                st.session_state.project_images_index[project_index] = current_image_index
+                st.rerun()
+
+            if next_image:
+                current_image_index = (current_image_index + 1) % len(images)
+                st.session_state.project_images_index[project_index] = current_image_index
+                st.rerun()
 
             with col2:
                 st.write(f"Image {current_image_index + 1} of {len(images)}")
-
-            with col3:
-                if st.button("Next Image →"):
-                    # Go to next image, wrap around to first if at last image
-                    current_image_index = (current_image_index + 1) % len(images)
-                    st.session_state.project_images_index[project_index] = current_image_index
-                    st.rerun()
 
         # Project Details
         st.header("Project Overview")
