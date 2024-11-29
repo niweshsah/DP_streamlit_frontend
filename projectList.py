@@ -497,11 +497,6 @@ map_base64 = '/9j/4AAQSkZJRgABAQEAcwBzAAD//gBBRGVzY3JpcHRpb246IENyZWF0aW9uIFRpbW
 
 
 
-
-
-
-
-
 import streamlit as st
 import requests
 import base64
@@ -527,15 +522,13 @@ class GatherHubApp:
             st.session_state.liked_projects = {}
         if 'like_counts' not in st.session_state:
             st.session_state.like_counts = {}
-        if 'expanded_project' not in st.session_state:
-            st.session_state.expanded_project = None
         if 'project_images_index' not in st.session_state:
             st.session_state.project_images_index = {}
 
         # Set page configuration
         st.set_page_config(
-            page_title="Welcome to DP Open House", 
-            page_icon="📋", 
+            page_title="Welcome to DP Open House",
+            page_icon="📋",
             layout="wide"
         )
 
@@ -548,10 +541,9 @@ class GatherHubApp:
                 projects.sort(key=lambda x: x.get('Group_number', 0))
                 st.session_state.projects = projects
                 st.session_state.like_counts = {
-                    i: project.get('likes', 0) 
+                    i: project.get('likes', 0)
                     for i, project in enumerate(projects)
                 }
-                # Initialize image indices for each project
                 st.session_state.project_images_index = {
                     i: 0 for i in range(len(projects))
                 }
@@ -599,21 +591,22 @@ class GatherHubApp:
             st.error(f"Error decoding image: {e}")
             return None
 
-    def render_project_details_dropdown(self, project, index):
-        """Render expandable project details."""
-        # Image handling
-        if project.get('image'):
-            img = self.decode_base64_image(project['image'][0])
-            if img:
-                st.image(img, use_column_width=True)
+    def render_project_details_expander(self, project, index):
+        """Render project details inside an expander."""
+        with st.expander("Details"):
+            # Display additional images (if available)
+            if project.get('image') and len(project['image']) > 1:
+                for i, img_str in enumerate(project['image'][1:]):  # Skip the first image
+                    additional_img = self.decode_base64_image(img_str)
+                    if additional_img:
+                        st.image(additional_img, caption=f"Additional Image {i + 1}", use_column_width=True)
 
-        # Project Details Sections
-        with st.expander("Project Overview"):
+            # Project Details Sections
             st.markdown(f"**Group Number:** {project.get('Group_number', 'N/A')}")
             st.markdown(f"**Description:**\n{project.get('Description', 'No description available.')}")
-        
-        # Group Members
-        with st.expander("Group Members"):
+            
+            # Group Members
+            st.subheader("Group Members")
             members = project.get('members', [])
             if members:
                 for member in members:
@@ -624,30 +617,15 @@ class GatherHubApp:
                     )
             else:
                 st.write("No group members information available.")
-        
-        # Faculty Members
-        with st.expander("Faculty Members"):
+            
+            # Faculty Members
+            st.subheader("Faculty Members")
             faculty = project.get('Faculty', [])
             if faculty:
                 for fac_member in faculty:
                     st.markdown(f"- {fac_member}")
             else:
                 st.write("No faculty members information available.")
-        
-        # Multiple Images (if available)
-        if project.get('image') and len(project['image']) > 1:
-            with st.expander("Additional Project Images"):
-                # Slider for multiple images
-                image_index = st.slider(
-                    "Select Image", 
-                    0, 
-                    len(project['image']) - 1, 
-                    0, 
-                    key=f"image_slider_{index}"
-                )
-                additional_img = self.decode_base64_image(project['image'][image_index])
-                if additional_img:
-                    st.image(additional_img, use_column_width=True)
 
     def render_project_list(self):
         """Render the list of projects with expandable details."""
@@ -676,18 +654,18 @@ class GatherHubApp:
         if st.session_state.projects:
             for index, project in enumerate(st.session_state.projects):
                 with st.container():
-                    st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-                    
                     st.subheader(project.get('project_name', 'Unnamed Project'))
                     st.write(f"**Group Number:** {project.get('Group_number', 'N/A')}")
 
+                    # Display the first image by default
+                    if project.get('image'):
+                        first_image = self.decode_base64_image(project['image'][0])
+                        if first_image:
+                            st.image(first_image, caption="Project Image", use_column_width=True)
+
                     col1, col2 = st.columns([3, 1])
                     with col1:
-                        # Toggle for project details
-                        details_toggle = st.toggle(
-                            "Show Details", 
-                            key=f"details_toggle_{index}"
-                        )
+                        self.render_project_details_expander(project, index)
                     
                     with col2:
                         like_count = st.session_state.like_counts.get(index, 0)
@@ -700,11 +678,6 @@ class GatherHubApp:
                         if like_button:
                             self.toggle_like(index)
 
-                    # Render details if toggle is on
-                    if details_toggle:
-                        self.render_project_details_dropdown(project, index)
-
-                    st.markdown("</div>", unsafe_allow_html=True)
                     st.markdown("---")
         else:
             st.warning("No projects found.")
