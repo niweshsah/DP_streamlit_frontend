@@ -13,9 +13,15 @@ from email.mime.multipart import MIMEMultipart
 from io import BytesIO
 from datetime import datetime, timedelta
 import re
+import os
+
+sender_email1 = os.getenv("EMAIL")
+sender_password1 = os.getenv("EMAIL_PASSWORD")
+
 
 # Backend Base URL
 BASE_URL = "http://gatherhub-r7yr.onrender.com/user/conference/DP2024"
+
 
 class GroupSubmissionApp:
     def __init__(self):
@@ -151,8 +157,8 @@ class GroupSubmissionApp:
     def send_email(self, recipient_email, otp):
         """Send OTP via email with improved error handling"""
         try:
-            sender_email = "b23277@students.iitmandi.ac.in"
-            sender_password = "xeqz fkph iypn ondb"
+            sender_email = sender_email1
+            sender_password = sender_password1
             
             message = MIMEMultipart()
             message['From'] = sender_email
