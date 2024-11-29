@@ -253,7 +253,7 @@ class GatherHubApp:
             st.session_state.project_images_index = {}
 
         # Set page configuration
-          st.set_page_config(
+        st.set_page_config(
             page_title="Welcome to DP Open House", 
             page_icon="📋", 
             layout="wide"
