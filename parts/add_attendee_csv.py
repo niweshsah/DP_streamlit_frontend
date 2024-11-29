@@ -22,11 +22,12 @@ print(f"rest_api_url: {rest_api_url}")
 print(f"sender_email1: {sender_email1}")
 print(f"sender_password1: {sender_password1}")
 
+
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
-)os.getenv("EMAIL_PASSWORD")
+)
 logger = logging.getLogger(__name__)
 
 class EmailValidationError(Exception):
