@@ -19,7 +19,8 @@ import os
 
 # Load environment variables
 load_dotenv()
-
+  
+  
 sender_email1 = os.getenv("EMAIL")
 sender_password1 = os.getenv("EMAIL_PASSWORD")
 
