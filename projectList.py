@@ -220,6 +220,288 @@ map_base64 = '/9j/4AAQSkZJRgABAQEAcwBzAAD//gBBRGVzY3JpcHRpb246IENyZWF0aW9uIFRpbW
 
 
 
+# import streamlit as st
+# import requests
+# import base64
+# from io import BytesIO
+# from PIL import Image
+
+
+# # Configuration
+# BASE_URL = 'https://gatherhub-r7yr.onrender.com/user/conference/DP2024'
+# PROJECT_DATA_URL = f'{BASE_URL}/groups/'
+
+# # IMPORTANT: Replace this with your actual base64-encoded map image
+# # map_base64 = ''  # Placeholder - must be replaced with actual base64 image string
+
+
+# class GatherHubApp:
+#     def __init__(self):
+#         # Initialize session state
+#         if 'projects' not in st.session_state:
+#             st.session_state.projects = []
+#         if 'liked_projects' not in st.session_state:
+#             st.session_state.liked_projects = {}
+#         if 'like_counts' not in st.session_state:
+#             st.session_state.like_counts = {}
+#         if 'selected_project' not in st.session_state:
+#             st.session_state.selected_project = None
+#         if 'project_images_index' not in st.session_state:
+#             st.session_state.project_images_index = {}
+
+#         # Set page configuration
+#         st.set_page_config(
+#             page_title="Welcome to DP Open House", 
+#             page_icon="📋", 
+#             layout="wide"
+#         )
+
+#     def load_projects(self):
+#         """Load projects from the API."""
+#         try:
+#             response = requests.get(PROJECT_DATA_URL, timeout=10)
+#             if response.status_code == 200:
+#                 projects = response.json()
+#                 projects.sort(key=lambda x: x.get('Group_number', 0))
+#                 st.session_state.projects = projects
+#                 st.session_state.like_counts = {
+#                     i: project.get('likes', 0) 
+#                     for i, project in enumerate(projects)
+#                 }
+#                 # Initialize image indices for each project
+#                 st.session_state.project_images_index = {
+#                     i: 0 for i in range(len(projects))
+#                 }
+#                 st.success("Projects loaded successfully!")
+#             else:
+#                 st.error(f"Failed to load projects. Status code: {response.status_code}")
+#         except requests.RequestException as e:
+#             st.error(f"Error fetching projects: {e}")
+
+#     def toggle_like(self, project_index):
+#         """Handle like/unlike functionality with prevention of multiple likes."""
+#         projects = st.session_state.projects
+#         project = projects[project_index]
+#         group_number = project.get('Group_number')
+
+#         # Check if this project has already been liked by this user
+#         if project_index in st.session_state.liked_projects:
+#             st.warning("You have already liked this project.")
+#             return
+
+#         try:
+#             url = f'{BASE_URL}/groups/{group_number}/like-count-increase'
+#             response = requests.put(url, timeout=5)
+
+#             if response.status_code == 200:
+#                 # Mark project as liked
+#                 st.session_state.liked_projects[project_index] = True
+#                 # Update like count
+#                 updated_like_count = response.json().get('likes', st.session_state.like_counts[project_index] + 1)
+#                 st.session_state.like_counts[project_index] = updated_like_count
+#                 st.success("Project liked successfully!")
+#             else:
+#                 st.error(f"Failed to update like status. Status code: {response.status_code}")
+#         except requests.RequestException as e:
+#             st.error(f"Error updating like status: {e}")
+
+#     def decode_base64_image(self, base64_string):
+#         """Decode a base64 image string to a PIL Image."""
+#         try:
+#             if ',' in base64_string:
+#                 base64_string = base64_string.split(',')[1]
+#             image_bytes = base64.b64decode(base64_string)
+#             return Image.open(BytesIO(image_bytes))
+#         except Exception as e:
+#             st.error(f"Error decoding image: {e}")
+#             return None
+
+#     def render_project_detail(self, project):
+#         """Render the project details page with image swiping."""
+#         st.title(project.get('project_name', 'Project Details'))
+#         if st.button("← Back to Project List"):
+#             st.session_state.selected_project = None
+#             st.session_state.project_images_index = {}
+#             return
+
+#         # Find the index of the current project
+#         project_index = st.session_state.projects.index(project)
+
+#         # Initialize or retrieve the current image index for this project
+#         if project_index not in st.session_state.project_images_index:
+#             st.session_state.project_images_index[project_index] = 0
+
+#         images = project.get('image', [])
+#         if images:
+#             # Get current image index from session state
+#             current_image_index = st.session_state.project_images_index[project_index]
+#             current_image = self.decode_base64_image(images[current_image_index])
+            
+#             if current_image:
+#                 st.image(current_image, use_column_width=True)
+
+#             # Image navigation
+#             col1, col2, col3 = st.columns([1, 1, 1])
+#             with col1:
+#                 prev_image = st.button("← Previous Image")
+
+#             with col3:
+#                 next_image = st.button("Next Image →")
+
+#             # Handle image navigation outside of the column blocks
+#             if prev_image:
+#                 current_image_index = (current_image_index - 1) % len(images)
+#                 st.session_state.project_images_index[project_index] = current_image_index
+#                 st.rerun()
+
+#             if next_image:
+#                 current_image_index = (current_image_index + 1) % len(images)
+#                 st.session_state.project_images_index[project_index] = current_image_index
+#                 st.rerun()
+
+#             with col2:
+#                 st.write(f"Image {current_image_index + 1} of {len(images)}")
+
+#         # Project Details
+#         st.header("Project Overview")
+#         st.markdown(f"**Group Number:** {project.get('Group_number', 'N/A')}")
+#         st.markdown(f"**Description:**\n{project.get('Description', 'No description available.')}")
+        
+#         # Group Members
+#         st.header("Group Members")
+#         members = project.get('members', [])
+#         if members:
+#             for member in members:
+#                 st.markdown(
+#                     f"- **{member.get('name', 'Unknown')}** "
+#                     f"(Roll No: {member.get('roll_no', 'N/A')}) "
+#                     f"- {member.get('contribution', 'No specific contribution noted')}"
+#                 )
+#         else:
+#             st.write("No group members information available.")
+        
+#         # Faculty Members
+#         st.header("Faculty Members")
+#         faculty = project.get('Faculty', [])
+#         if faculty:
+#             for fac_member in faculty:
+#                 st.markdown(f"- {fac_member}")
+#         else:
+#             st.write("No faculty members information available.")
+
+#     def render_project_list(self):
+#         """Render the list of projects with like prevention."""
+#         st.title("Welcome to DP Open House")
+#         self.load_projects()
+        
+#         # Add clickable map with message
+#         map_url = "https://drive.google.com/file/d/1aNzt_8xthj8wNcIYWFm6YAaxDhHmhKcn/view?usp=sharing"
+        
+#         if not map_base64:
+#             st.warning("Map image not configured. Please add base64 encoded map image.")
+#         else:
+#             st.markdown(
+#                 "<div style='text-align: center; margin-bottom: 20px;'>"
+#                 f"<p style='font-size: 16px; color: blue;'>📍 Click the map below to download location details ⬇️</p>"
+#                 f'<a href="{map_url}" target="_blank">'
+#                 f'<img src="data:image/png;base64,{map_base64}" style="width: 60%; margin: auto; display: block;">'
+#                 f'</a>'
+#                 "</div>",
+#                 unsafe_allow_html=True
+#             )
+
+#         if not st.session_state.projects:
+#             self.load_projects()
+        
+#         if st.session_state.projects:
+#             for index, project in enumerate(st.session_state.projects):
+#                 with st.container():
+#                     st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+                    
+#                     # Display project image
+#                     image_placeholder = st.empty()
+#                     if project.get('image'):
+#                         img = self.decode_base64_image(project['image'][0])
+#                         if img:
+#                             image_placeholder.image(img, use_column_width=True)
+
+#                     st.subheader(project.get('project_name', 'Unnamed Project'))
+#                     st.write(f"**Group Number:** {project.get('Group_number', 'N/A')}")
+
+#                     col1, col2 = st.columns([3, 1])
+#                     with col1:
+#                         if st.button(f"View Details", key=f"view_{index}"):
+#                             st.session_state.selected_project = project
+                    
+#                     with col2:
+#                         like_count = st.session_state.like_counts.get(index, 0)
+#                         is_liked = index in st.session_state.liked_projects
+                        
+#                         like_button = st.button(
+#                             f"{'❤️' if is_liked else '🤍'} {like_count}", 
+#                             key=f"like_{index}"
+#                         )
+#                         if like_button:
+#                             self.toggle_like(index)
+
+#                     st.markdown("</div>", unsafe_allow_html=True)
+#                     st.markdown("---")
+#         else:
+#             st.warning("No projects found.")
+
+#     def run(self):
+#         """Main application runner."""
+#         if st.session_state.selected_project:
+#             self.render_project_detail(st.session_state.selected_project)
+#         else:
+#             self.render_project_list()
+
+
+# def main():
+#     app = GatherHubApp()
+#     app.run()
+
+
+# if __name__ == "__main__":
+#     main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import streamlit as st
 import requests
 import base64
@@ -232,6 +514,7 @@ BASE_URL = 'https://gatherhub-r7yr.onrender.com/user/conference/DP2024'
 PROJECT_DATA_URL = f'{BASE_URL}/groups/'
 
 # IMPORTANT: Replace this with your actual base64-encoded map image
+# If you don't have a base64 image, leave as an empty string
 # map_base64 = ''  # Placeholder - must be replaced with actual base64 image string
 
 
@@ -244,8 +527,8 @@ class GatherHubApp:
             st.session_state.liked_projects = {}
         if 'like_counts' not in st.session_state:
             st.session_state.like_counts = {}
-        if 'selected_project' not in st.session_state:
-            st.session_state.selected_project = None
+        if 'expanded_project' not in st.session_state:
+            st.session_state.expanded_project = None
         if 'project_images_index' not in st.session_state:
             st.session_state.project_images_index = {}
 
@@ -316,81 +599,58 @@ class GatherHubApp:
             st.error(f"Error decoding image: {e}")
             return None
 
-    def render_project_detail(self, project):
-        """Render the project details page with image swiping."""
-        st.title(project.get('project_name', 'Project Details'))
-        if st.button("← Back to Project List"):
-            st.session_state.selected_project = None
-            st.session_state.project_images_index = {}
-            return
+    def render_project_details_dropdown(self, project, index):
+        """Render expandable project details."""
+        # Image handling
+        if project.get('image'):
+            img = self.decode_base64_image(project['image'][0])
+            if img:
+                st.image(img, use_column_width=True)
 
-        # Find the index of the current project
-        project_index = st.session_state.projects.index(project)
-
-        # Initialize or retrieve the current image index for this project
-        if project_index not in st.session_state.project_images_index:
-            st.session_state.project_images_index[project_index] = 0
-
-        images = project.get('image', [])
-        if images:
-            # Get current image index from session state
-            current_image_index = st.session_state.project_images_index[project_index]
-            current_image = self.decode_base64_image(images[current_image_index])
-            
-            if current_image:
-                st.image(current_image, use_column_width=True)
-
-            # Image navigation
-            col1, col2, col3 = st.columns([1, 1, 1])
-            with col1:
-                prev_image = st.button("← Previous Image")
-
-            with col3:
-                next_image = st.button("Next Image →")
-
-            # Handle image navigation outside of the column blocks
-            if prev_image:
-                current_image_index = (current_image_index - 1) % len(images)
-                st.session_state.project_images_index[project_index] = current_image_index
-                st.rerun()
-
-            if next_image:
-                current_image_index = (current_image_index + 1) % len(images)
-                st.session_state.project_images_index[project_index] = current_image_index
-                st.rerun()
-
-            with col2:
-                st.write(f"Image {current_image_index + 1} of {len(images)}")
-
-        # Project Details
-        st.header("Project Overview")
-        st.markdown(f"**Group Number:** {project.get('Group_number', 'N/A')}")
-        st.markdown(f"**Description:**\n{project.get('Description', 'No description available.')}")
+        # Project Details Sections
+        with st.expander("Project Overview"):
+            st.markdown(f"**Group Number:** {project.get('Group_number', 'N/A')}")
+            st.markdown(f"**Description:**\n{project.get('Description', 'No description available.')}")
         
         # Group Members
-        st.header("Group Members")
-        members = project.get('members', [])
-        if members:
-            for member in members:
-                st.markdown(
-                    f"- **{member.get('name', 'Unknown')}** "
-                    f"(Roll No: {member.get('roll_no', 'N/A')}) "
-                    f"- {member.get('contribution', 'No specific contribution noted')}"
-                )
-        else:
-            st.write("No group members information available.")
+        with st.expander("Group Members"):
+            members = project.get('members', [])
+            if members:
+                for member in members:
+                    st.markdown(
+                        f"- **{member.get('name', 'Unknown')}** "
+                        f"(Roll No: {member.get('roll_no', 'N/A')}) "
+                        f"- {member.get('contribution', 'No specific contribution noted')}"
+                    )
+            else:
+                st.write("No group members information available.")
         
         # Faculty Members
-        st.header("Faculty Members")
-        faculty = project.get('Faculty', [])
-        if faculty:
-            for fac_member in faculty:
-                st.markdown(f"- {fac_member}")
-        else:
-            st.write("No faculty members information available.")
+        with st.expander("Faculty Members"):
+            faculty = project.get('Faculty', [])
+            if faculty:
+                for fac_member in faculty:
+                    st.markdown(f"- {fac_member}")
+            else:
+                st.write("No faculty members information available.")
+        
+        # Multiple Images (if available)
+        if project.get('image') and len(project['image']) > 1:
+            with st.expander("Additional Project Images"):
+                # Slider for multiple images
+                image_index = st.slider(
+                    "Select Image", 
+                    0, 
+                    len(project['image']) - 1, 
+                    0, 
+                    key=f"image_slider_{index}"
+                )
+                additional_img = self.decode_base64_image(project['image'][image_index])
+                if additional_img:
+                    st.image(additional_img, use_column_width=True)
 
     def render_project_list(self):
-        """Render the list of projects with like prevention."""
+        """Render the list of projects with expandable details."""
         st.title("Welcome to DP Open House")
         self.load_projects()
         
@@ -418,20 +678,16 @@ class GatherHubApp:
                 with st.container():
                     st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
                     
-                    # Display project image
-                    image_placeholder = st.empty()
-                    if project.get('image'):
-                        img = self.decode_base64_image(project['image'][0])
-                        if img:
-                            image_placeholder.image(img, use_column_width=True)
-
                     st.subheader(project.get('project_name', 'Unnamed Project'))
                     st.write(f"**Group Number:** {project.get('Group_number', 'N/A')}")
 
                     col1, col2 = st.columns([3, 1])
                     with col1:
-                        if st.button(f"View Details", key=f"view_{index}"):
-                            st.session_state.selected_project = project
+                        # Toggle for project details
+                        details_toggle = st.toggle(
+                            "Show Details", 
+                            key=f"details_toggle_{index}"
+                        )
                     
                     with col2:
                         like_count = st.session_state.like_counts.get(index, 0)
@@ -444,6 +700,10 @@ class GatherHubApp:
                         if like_button:
                             self.toggle_like(index)
 
+                    # Render details if toggle is on
+                    if details_toggle:
+                        self.render_project_details_dropdown(project, index)
+
                     st.markdown("</div>", unsafe_allow_html=True)
                     st.markdown("---")
         else:
@@ -451,10 +711,7 @@ class GatherHubApp:
 
     def run(self):
         """Main application runner."""
-        if st.session_state.selected_project:
-            self.render_project_detail(st.session_state.selected_project)
-        else:
-            self.render_project_list()
+        self.render_project_list()
 
 
 def main():
