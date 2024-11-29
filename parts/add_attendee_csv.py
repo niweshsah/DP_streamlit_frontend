@@ -12,6 +12,8 @@ from datetime import datetime
 import re
 from dotenv import load_dotenv
 
+
+
 rest_api_url = os.getenv("REST_API_URL")
 
 # Set up logging
@@ -144,17 +146,22 @@ def send_email_to_attendees(attendees: List[Dict], smtp_config: Dict) -> Tuple[b
                 body = f"""
 Hello {attendee['name']},
 
-This email is part of our Conference Management System project, group-0 DP project. You all are requested to fill the following details in the given link:
+This email is part of our Conference Management System project, group-0 DP project. Only one member from each group is requested to fill the following details in the given link:
 
 1) Group Number
 2) Project Name
+3) Project Description
+4) Faculty Members
+5) Members Details with their Name, Roll Number, and Contribution
+6) 3 Images of your project
 
+Please fill the details in the given link: https://dpappprojectsubmission.streamlit.app/
 
-Please complete your registration details at:
-https://niweshvistingcardposting.streamlit.app/?email={recipient_email}&conference_code=DP2024
+If due to any reason you are unable to fill the details, you can  give the above details by replying to this email.
 
+These details will be shown to the visitors of the open house event, so please fill the details carefully.
 
-Need help? Contact Niwesh Sah (Roll No. B23277) at 9451864348.
+For any queries, feel free to contact us at 9451864348.
 
 Best regards,
 GatherHub Team
