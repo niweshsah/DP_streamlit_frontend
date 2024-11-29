@@ -138,6 +138,10 @@ class GroupSubmissionApp:
     def validate_email(self, email):
         """Validate email format"""
         email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        
+        """Validate email format and restrict to iitmandi.ac.in domain."""
+        # email_regex = r'^[a-zA-Z0-9._%+-]+@iitmandi\.ac\.in$'
+        
         return re.match(email_regex, email) is not None
 
     def generate_otp(self):
@@ -292,6 +296,8 @@ class GroupSubmissionApp:
         st.subheader("🔒 Email Verification")
         email = st.text_input("Enter Your Email for Verification", help="Enter your email to receive OTP")
         
+        if email and not self.validate_email(email):
+            st.error("Only email addresses ending with '@iitmandi.ac.in' are allowed.")
         # OTP Sending Cooldown
         if email in st.session_state.otp_storage and "last_sent" in st.session_state.otp_storage[email]:
             elapsed = (datetime.now() - st.session_state.otp_storage[email]["last_sent"]).total_seconds()
