@@ -222,7 +222,6 @@ map_base64 = '/9j/4AAQSkZJRgABAQEAcwBzAAD//gBBRGVzY3JpcHRpb246IENyZWF0aW9uIFRpbW
 
 
 
-
 import streamlit as st
 import requests
 import base64
@@ -234,8 +233,9 @@ from PIL import Image
 BASE_URL = 'https://gatherhub-r7yr.onrender.com/user/conference/DP2024'
 PROJECT_DATA_URL = f'{BASE_URL}/groups/'
 
-# Replace with your actual base64-encoded map image
-# map_base64 = 'fdjdhjhdsjvndsvdsfdhyuwehvje'  
+# IMPORTANT: Replace this with your actual base64-encoded map image
+# Example: map_base64 = '/9j/4AAQSkZJRgABAQEA...'  # Your base64 string here
+# map_base64 = ''  # Placeholder - must be replaced with actual base64 image string
 
 
 class GatherHubApp:
@@ -253,8 +253,8 @@ class GatherHubApp:
             st.session_state.project_images_index = {}
 
         # Set page configuration
-        st.set_page_config(
-            page_title="GatherHub Project Showcase", 
+          st.set_page_config(
+            page_title="Welcome to DP Open House", 
             page_icon="📋", 
             layout="wide"
         )
@@ -349,7 +349,7 @@ class GatherHubApp:
                     # Go to previous image, wrap around to last if at first image
                     current_image_index = (current_image_index - 1) % len(images)
                     st.session_state.project_images_index[project_index] = current_image_index
-                    st.rerun()
+                    st.experimental_rerun()
 
             with col2:
                 st.write(f"Image {current_image_index + 1} of {len(images)}")
@@ -359,14 +359,34 @@ class GatherHubApp:
                     # Go to next image, wrap around to first if at last image
                     current_image_index = (current_image_index + 1) % len(images)
                     st.session_state.project_images_index[project_index] = current_image_index
-                    st.rerun()
+                    st.experimental_rerun()
 
-        # Rest of the project details remains the same
+        # Project Details
         st.header("Project Overview")
         st.markdown(f"**Group Number:** {project.get('Group_number', 'N/A')}")
         st.markdown(f"**Description:**\n{project.get('Description', 'No description available.')}")
+        
+        # Group Members
         st.header("Group Members")
-        # ... (rest of the code remains unchanged)
+        members = project.get('members', [])
+        if members:
+            for member in members:
+                st.markdown(
+                    f"- **{member.get('name', 'Unknown')}** "
+                    f"(Roll No: {member.get('roll_no', 'N/A')}) "
+                    f"- {member.get('contribution', 'No specific contribution noted')}"
+                )
+        else:
+            st.write("No group members information available.")
+        
+        # Faculty Members
+        st.header("Faculty Members")
+        faculty = project.get('Faculty', [])
+        if faculty:
+            for fac_member in faculty:
+                st.markdown(f"- {fac_member}")
+        else:
+            st.write("No faculty members information available.")
 
     def render_project_list(self):
         """Render the list of projects with like prevention."""
@@ -375,15 +395,19 @@ class GatherHubApp:
         
         # Add clickable map with message
         map_url = "https://drive.google.com/file/d/1aNzt_8xthj8wNcIYWFm6YAaxDhHmhKcn/view?usp=sharing"
-        st.markdown(
-            "<div style='text-align: center; margin-bottom: 20px;'>"
-            f"<p style='font-size: 16px; color: blue;'>📍 Click the map below to download location details ⬇️</p>"
-            f'<a href="{map_url}" target="_blank">'
-            f'<img src="data:image/png;base64,{map_base64}" style="width: 60%; margin: auto; display: block;">'
-            f'</a>'
-            "</div>",
-            unsafe_allow_html=True
-        )
+        
+        if not map_base64:
+            st.warning("Map image not configured. Please add base64 encoded map image.")
+        else:
+            st.markdown(
+                "<div style='text-align: center; margin-bottom: 20px;'>"
+                f"<p style='font-size: 16px; color: blue;'>📍 Click the map below to download location details ⬇️</p>"
+                f'<a href="{map_url}" target="_blank">'
+                f'<img src="data:image/png;base64,{map_base64}" style="width: 60%; margin: auto; display: block;">'
+                f'</a>'
+                "</div>",
+                unsafe_allow_html=True
+            )
 
         if not st.session_state.projects:
             self.load_projects()
