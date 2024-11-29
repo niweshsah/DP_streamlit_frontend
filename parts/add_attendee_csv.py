@@ -272,10 +272,11 @@ def main_attendee_csv():
 
                     # Submit attendees
                     with st.spinner("Submitting selected attendees..."):
-                        submit_success, submit_error = post_selected_attendees(post_url, selected_attendees)
+                        # submit_success, submit_error = post_selected_attendees(post_url, selected_attendees)
                         
-                        if submit_success:
-                            st.success(f"✅ Successfully submitted {len(selected_attendees)} attendees!")
+                        # if submit_success:
+                        if True:
+                        #     st.success(f"✅ Successfully submitted {len(selected_attendees)} attendees!")
                             
                             # Send emails
                             with st.spinner("Sending confirmation emails..."):
