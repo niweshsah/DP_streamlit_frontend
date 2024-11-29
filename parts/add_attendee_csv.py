@@ -140,14 +140,19 @@ def send_email_to_attendees(attendees: List[Dict], smtp_config: Dict) -> Tuple[b
         for attendee in attendees:
             try:
                 recipient_email = attendee["email"]
-                subject = "🎉 Registration Confirmation"
+                subject = "Open House Project Details"
                 body = f"""
 Hello {attendee['name']},
 
-This email is part of our Conference Management System project, group-0 DP project. We are trying to demonstrate the working of our system by trying to mark your attendance based on this registration. You are kindly requested to complete your registration details by clicking on the link below.
+This email is part of our Conference Management System project, group-0 DP project. You all are requested to fill the following details in the given link:
+
+1) Group Number
+2) Project Name
+
 
 Please complete your registration details at:
 https://niweshvistingcardposting.streamlit.app/?email={recipient_email}&conference_code=DP2024
+
 
 Need help? Contact Niwesh Sah (Roll No. B23277) at 9451864348.
 
