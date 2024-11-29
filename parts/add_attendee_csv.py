@@ -15,12 +15,18 @@ from dotenv import load_dotenv
 
 
 rest_api_url = os.getenv("REST_API_URL")
+sender_email1 = os.getenv("EMAIL")
+sender_password1 = os.getenv("EMAIL_PASSWORD")
+
+print(f"rest_api_url: {rest_api_url}")
+print(f"sender_email1: {sender_email1}")
+print(f"sender_password1: {sender_password1}")
 
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
-)
+)os.getenv("EMAIL_PASSWORD")
 logger = logging.getLogger(__name__)
 
 class EmailValidationError(Exception):
@@ -54,6 +60,8 @@ def validate_csv_data(df: pd.DataFrame) -> Tuple[bool, str]:
     Returns:
         Tuple[bool, str]: (Success status, Error message if any)
     """
+    
+
     try:
         # Check for required columns
         required_columns = ["name", "email"]
@@ -65,6 +73,8 @@ def validate_csv_data(df: pd.DataFrame) -> Tuple[bool, str]:
         empty_values = df[required_columns].isnull().any() | (df[required_columns] == '').any()
         if empty_values.any():
             return False, "CSV contains empty or missing values in required columns"
+
+
 
         # Validate email formats
         invalid_emails = []
@@ -124,7 +134,7 @@ def send_email_to_attendees(attendees: List[Dict], smtp_config: Dict) -> Tuple[b
     Send confirmation emails to attendees with comprehensive error handling.
     
     Args:
-        attendees: List of attendee dictionaries
+        attendees: List of attendee dictionariesos.getenv("EMAIL_PASSWORD")
         smtp_config: SMTP server configuration
         
     Returns:
@@ -166,6 +176,7 @@ For any queries, feel free to contact us at 9451864348.
 Best regards,
 GatherHub Team
                 """
+
 
                 msg = MIMEMultipart()
                 msg["From"] = smtp_config['email']
@@ -222,8 +233,8 @@ def main_attendee_csv():
         'server': "smtp.gmail.com",
         'port': 587,
         # 'email': "sahniwesh@gmail.com",
-        'email': os.getenv("EMAIL"),
-        'password': os.getenv("EMAIL_PASSWORD")
+        'email': sender_email1,
+        'password': sender_password1
     }
 
     # File upload section
