@@ -547,7 +547,7 @@ class GatherHubApp:
                 st.session_state.project_images_index = {
                     i: 0 for i in range(len(projects))
                 }
-                st.success("Projects loaded successfully!")
+                # st.success("Projects loaded successfully!")
             else:
                 st.error(f"Failed to load projects. Status code: {response.status_code}")
         except requests.RequestException as e:
