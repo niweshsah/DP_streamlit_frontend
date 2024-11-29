@@ -262,7 +262,7 @@ BASE_URL = 'https://gatherhub-r7yr.onrender.com/user/conference/DP2024'
 PROJECT_DATA_URL = f'{BASE_URL}/groups/'
 
 # Placeholder for map base64 - replace with actual base64 encoded map image
-map_base64 = ''  # You should replace this with your actual base64 map image
+# map_base64 = ''  # You should replace this with your actual base64 map image
 
 class GatherHubApp:
     def __init__(self):
