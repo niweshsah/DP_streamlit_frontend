@@ -12,6 +12,8 @@ import os
 import json
 import logging
 
+load_dotenv()
+
 rest_api_url = os.getenv("REST_API_URL")
 visiting_card_url = os.getenv("VISITING_CARD_URL")
 sender_email = os.getenv("EMAIL")
