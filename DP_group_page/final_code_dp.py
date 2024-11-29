@@ -310,7 +310,7 @@ class GroupSubmissionApp:
         email = st.text_input("Enter Your Email for Verification", help="Enter your email to receive OTP")
         
         if email and not self.validate_email(email):
-            st.error("Only email addresses ending with '@iitmandi.ac.in' are allowed.")
+            st.error("Only email addresses ending with '@students.iitmandi.ac.in' are allowed.")
         # OTP Sending Cooldown
         if email in st.session_state.otp_storage and "last_sent" in st.session_state.otp_storage[email]:
             elapsed = (datetime.now() - st.session_state.otp_storage[email]["last_sent"]).total_seconds()
