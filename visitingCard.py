@@ -8,6 +8,9 @@ import base64
 import json
 import streamlit.components.v1 as components
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 rest_api_url = os.getenv("REST_API_URL")
 
