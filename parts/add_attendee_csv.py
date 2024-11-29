@@ -10,6 +10,7 @@ from email.mime.multipart import MIMEMultipart
 import logging
 from datetime import datetime
 import re
+from dotenv import load_dotenv
 
 rest_api_url = os.getenv("REST_API_URL")
 
