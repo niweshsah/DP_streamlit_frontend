@@ -23,8 +23,8 @@ load_dotenv()
 sender_email1 = os.getenv("EMAIL")
 sender_password1 = os.getenv("EMAIL_PASSWORD")
 
-print(f"Email: {sender_email1}")
-print(f"Password: {sender_password1}")
+# print(f"Email: {sender_email1}")
+# print(f"Password: {sender_password1}")
 
 # Backend Base URL
 BASE_URL = "http://gatherhub-r7yr.onrender.com/user/conference/DP2024"
