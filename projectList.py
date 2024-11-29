@@ -349,7 +349,7 @@ class GatherHubApp:
                     # Go to previous image, wrap around to last if at first image
                     current_image_index = (current_image_index - 1) % len(images)
                     st.session_state.project_images_index[project_index] = current_image_index
-                    st.experimental_rerun()
+                    st.rerun()
 
             with col2:
                 st.write(f"Image {current_image_index + 1} of {len(images)}")
@@ -359,7 +359,7 @@ class GatherHubApp:
                     # Go to next image, wrap around to first if at last image
                     current_image_index = (current_image_index + 1) % len(images)
                     st.session_state.project_images_index[project_index] = current_image_index
-                    st.experimental_rerun()
+                    st.rerun()
 
         # Project Details
         st.header("Project Overview")
