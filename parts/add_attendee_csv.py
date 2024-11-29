@@ -12,6 +12,7 @@ from datetime import datetime
 import re
 from dotenv import load_dotenv
 
+load_dotenv()
 
 
 rest_api_url = os.getenv("REST_API_URL")

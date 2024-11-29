@@ -6,6 +6,7 @@ from home import main_home
 from home2_via_email import main_home2
 import os
 
+
 rest_api_url = os.getenv("REST_API_URL")
 
 # Configure page settings
