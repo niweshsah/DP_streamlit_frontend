@@ -2,21 +2,219 @@ map_base64 = '/9j/4AAQSkZJRgABAQEAcwBzAAD//gBBRGVzY3JpcHRpb246IENyZWF0aW9uIFRpbW
 
 
 
+# import streamlit as st
+# import requests
+# import base64
+# from io import BytesIO
+# from PIL import Image
+
+
+# # Configuration
+# BASE_URL = 'https://gatherhub-r7yr.onrender.com/user/conference/DP2024'
+# PROJECT_DATA_URL = f'{BASE_URL}/groups/'
+
+# # IMPORTANT: Replace this with your actual base64-encoded map image
+# # If you don't have a base64 image, leave as an empty string
+# # map_base64 = ''  # Placeholder - must be replaced with actual base64 image string
+
+
+# class GatherHubApp:
+#     def __init__(self):
+#         # Initialize session state
+#         if 'projects' not in st.session_state:
+#             st.session_state.projects = []
+#         if 'liked_projects' not in st.session_state:
+#             st.session_state.liked_projects = {}
+#         if 'like_counts' not in st.session_state:
+#             st.session_state.like_counts = {}
+#         if 'project_images_index' not in st.session_state:
+#             st.session_state.project_images_index = {}
+
+#         # Set page configuration
+#         st.set_page_config(
+#             page_title="Welcome to DP Open House",
+#             page_icon="📋",
+#             layout="wide"
+#         )
+
+#     def load_projects(self):
+#         """Load projects from the API."""
+#         try:
+#             response = requests.get(PROJECT_DATA_URL, timeout=10)
+#             if response.status_code == 200:
+#                 projects = response.json()
+#                 projects.sort(key=lambda x: x.get('Group_number', 0))
+#                 st.session_state.projects = projects
+#                 st.session_state.like_counts = {
+#                     i: project.get('likes', 0)
+#                     for i, project in enumerate(projects)
+#                 }
+#                 st.session_state.project_images_index = {
+#                     i: 0 for i in range(len(projects))
+#                 }
+#                 # st.success("Projects loaded successfully!")
+#             else:
+#                 st.error(f"Failed to load projects. Status code: {response.status_code}")
+#         except requests.RequestException as e:
+#             st.error(f"Error fetching projects: {e}")
+
+#     def toggle_like(self, project_index):
+#         """Handle like/unlike functionality with prevention of multiple likes."""
+#         projects = st.session_state.projects
+#         project = projects[project_index]
+#         group_number = project.get('Group_number')
+
+#         # Check if this project has already been liked by this user
+#         if project_index in st.session_state.liked_projects:
+#             st.warning("You have already liked this project.")
+#             return
+
+#         try:
+#             url = f'{BASE_URL}/groups/{group_number}/like-count-increase'
+#             response = requests.put(url, timeout=5)
+
+#             if response.status_code == 200:
+#                 # Mark project as liked
+#                 st.session_state.liked_projects[project_index] = True
+#                 # Update like count
+#                 updated_like_count = response.json().get('likes', st.session_state.like_counts[project_index] + 1)
+#                 st.session_state.like_counts[project_index] = updated_like_count
+#                 st.success("Project liked successfully!")
+#             else:
+#                 st.error(f"Failed to update like status. Status code: {response.status_code}")
+#         except requests.RequestException as e:
+#             st.error(f"Error updating like status: {e}")
+
+#     def decode_base64_image(self, base64_string):
+#         """Decode a base64 image string to a PIL Image."""
+#         try:
+#             if ',' in base64_string:
+#                 base64_string = base64_string.split(',')[1]
+#             image_bytes = base64.b64decode(base64_string)
+#             return Image.open(BytesIO(image_bytes))
+#         except Exception as e:
+#             st.error(f"Error decoding image: {e}")
+#             return None
+
+#     def render_project_details_expander(self, project, index):
+#         """Render project details inside an expander."""
+#         with st.expander("Details"):
+#             # Display additional images (if available)
+#             if project.get('image') and len(project['image']) > 1:
+#                 for i, img_str in enumerate(project['image'][1:]):  # Skip the first image
+#                     additional_img = self.decode_base64_image(img_str)
+#                     if additional_img:
+#                         st.image(additional_img, caption=f"Additional Image {i + 1}", use_column_width=True)
+
+#             # Project Details Sections
+#             st.markdown(f"**Group Number:** {project.get('Group_number', 'N/A')}")
+#             st.markdown(f"**Description:**\n{project.get('Description', 'No description available.')}")
+            
+#             # Group Members
+#             st.subheader("Group Members")
+#             members = project.get('members', [])
+#             if members:
+#                 for member in members:
+#                     st.markdown(
+#                         f"- **{member.get('name', 'Unknown')}** "
+#                         f"(Roll No: {member.get('roll_no', 'N/A')}) "
+#                         f"- {member.get('contribution', 'No specific contribution noted')}"
+#                     )
+#             else:
+#                 st.write("No group members information available.")
+            
+#             # Faculty Members
+#             st.subheader("Faculty Members")
+#             faculty = project.get('Faculty', [])
+#             if faculty:
+#                 for fac_member in faculty:
+#                     st.markdown(f"- {fac_member}")
+#             else:
+#                 st.write("No faculty members information available.")
+
+#     def render_project_list(self):
+#         """Render the list of projects with expandable details."""
+#         st.title("Welcome to DP Open House")
+#         self.load_projects()
+        
+#         # Add clickable map with message
+#         map_url = "https://drive.google.com/file/d/1aNzt_8xthj8wNcIYWFm6YAaxDhHmhKcn/view?usp=sharing"
+        
+#         if not map_base64:
+#             st.warning("Map image not configured. Please add base64 encoded map image.")
+#         else:
+#             st.markdown(
+#                 "<div style='text-align: center; margin-bottom: 20px;'>"
+#                 f"<p style='font-size: 16px; color: blue;'>📍 Click the map below to download location details ⬇️</p>"
+#                 f'<a href="{map_url}" target="_blank">'
+#                 f'<img src="data:image/png;base64,{map_base64}" style="width: 60%; margin: auto; display: block;">'
+#                 f'</a>'
+#                 "</div>",
+#                 unsafe_allow_html=True
+#             )
+
+#         if not st.session_state.projects:
+#             self.load_projects()
+        
+#         if st.session_state.projects:
+#             for index, project in enumerate(st.session_state.projects):
+#                 with st.container():
+#                     st.subheader(project.get('project_name', 'Unnamed Project'))
+#                     st.write(f"**Group Number:** {project.get('Group_number', 'N/A')}")
+
+#                     # Display the first image by default
+#                     if project.get('image'):
+#                         first_image = self.decode_base64_image(project['image'][0])
+#                         if first_image:
+#                             st.image(first_image, caption="Project Image", use_column_width=True)
+
+#                     col1, col2 = st.columns([3, 1])
+#                     with col1:
+#                         self.render_project_details_expander(project, index)
+                    
+#                     with col2:
+#                         like_count = st.session_state.like_counts.get(index, 0)
+#                         is_liked = index in st.session_state.liked_projects
+                        
+#                         like_button = st.button(
+#                             f"{'❤️' if is_liked else '🤍'} {like_count}", 
+#                             key=f"like_{index}"
+#                         )
+#                         if like_button:
+#                             self.toggle_like(index)
+
+#                     st.markdown("---")
+#         else:
+#             st.warning("No projects found.")
+
+#     def run(self):
+#         """Main application runner."""
+#         self.render_project_list()
+
+
+# def main():
+#     app = GatherHubApp()
+#     app.run()
+
+
+# if __name__ == "__main__":
+#     main()
+
+
+
+
+
+
+
 import streamlit as st
 import requests
 import base64
 from io import BytesIO
 from PIL import Image
 
-
 # Configuration
 BASE_URL = 'https://gatherhub-r7yr.onrender.com/user/conference/DP2024'
 PROJECT_DATA_URL = f'{BASE_URL}/groups/'
-
-# IMPORTANT: Replace this with your actual base64-encoded map image
-# If you don't have a base64 image, leave as an empty string
-# map_base64 = ''  # Placeholder - must be replaced with actual base64 image string
-
 
 class GatherHubApp:
     def __init__(self):
@@ -27,175 +225,112 @@ class GatherHubApp:
             st.session_state.liked_projects = {}
         if 'like_counts' not in st.session_state:
             st.session_state.like_counts = {}
-        if 'project_images_index' not in st.session_state:
-            st.session_state.project_images_index = {}
 
-        # Set page configuration
         st.set_page_config(
             page_title="Welcome to DP Open House",
             page_icon="📋",
             layout="wide"
         )
 
-    def load_projects(self):
-        """Load projects from the API."""
+    @st.cache_data(ttl=300)  # Cache the project data for 5 minutes
+    def fetch_projects(self):
+        """Fetch project data from API."""
         try:
             response = requests.get(PROJECT_DATA_URL, timeout=10)
             if response.status_code == 200:
                 projects = response.json()
                 projects.sort(key=lambda x: x.get('Group_number', 0))
-                st.session_state.projects = projects
-                st.session_state.like_counts = {
-                    i: project.get('likes', 0)
-                    for i, project in enumerate(projects)
-                }
-                st.session_state.project_images_index = {
-                    i: 0 for i in range(len(projects))
-                }
-                # st.success("Projects loaded successfully!")
+                return projects
             else:
                 st.error(f"Failed to load projects. Status code: {response.status_code}")
         except requests.RequestException as e:
             st.error(f"Error fetching projects: {e}")
+        return []
+
+    def load_projects(self):
+        """Load projects into session state."""
+        if not st.session_state.projects:
+            st.session_state.projects = self.fetch_projects()
+            st.session_state.like_counts = {
+                i: project.get('likes', 0)
+                for i, project in enumerate(st.session_state.projects)
+            }
 
     def toggle_like(self, project_index):
-        """Handle like/unlike functionality with prevention of multiple likes."""
-        projects = st.session_state.projects
-        project = projects[project_index]
-        group_number = project.get('Group_number')
-
-        # Check if this project has already been liked by this user
+        """Handle like functionality with session-wide prevention."""
         if project_index in st.session_state.liked_projects:
-            st.warning("You have already liked this project.")
+            st.warning("You've already liked this project!")
             return
 
+        # Attempt to update like count via API
+        project = st.session_state.projects[project_index]
+        group_number = project.get('Group_number')
         try:
             url = f'{BASE_URL}/groups/{group_number}/like-count-increase'
             response = requests.put(url, timeout=5)
-
             if response.status_code == 200:
-                # Mark project as liked
+                # Update like count locally
                 st.session_state.liked_projects[project_index] = True
-                # Update like count
-                updated_like_count = response.json().get('likes', st.session_state.like_counts[project_index] + 1)
-                st.session_state.like_counts[project_index] = updated_like_count
-                st.success("Project liked successfully!")
+                updated_likes = response.json().get('likes', st.session_state.like_counts[project_index] + 1)
+                st.session_state.like_counts[project_index] = updated_likes
+                st.success(f"You liked project {project.get('project_name', 'N/A')}!")
             else:
-                st.error(f"Failed to update like status. Status code: {response.status_code}")
+                st.error("Failed to update like status.")
         except requests.RequestException as e:
             st.error(f"Error updating like status: {e}")
+
+    def render_project(self, project, index):
+        """Render a single project with interactive elements."""
+        st.subheader(project.get('project_name', 'Unnamed Project'))
+        st.write(f"**Group Number:** {project.get('Group_number', 'N/A')}")
+
+        # Display first image
+        if project.get('image'):
+            image = self.decode_base64_image(project['image'][0])
+            if image:
+                st.image(image, caption="Project Image", use_column_width=True)
+
+        # Interactive Like Button
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            with st.expander("Project Details"):
+                st.write(f"**Description:** {project.get('Description', 'No description available')}")
+                st.write(f"**Group Members:** {', '.join(m.get('name', 'N/A') for m in project.get('members', []))}")
+
+        with col2:
+            like_count = st.session_state.like_counts.get(index, 0)
+            liked = index in st.session_state.liked_projects
+
+            # Interactive Like Button
+            if st.button(f"{'❤️' if liked else '🤍'} {like_count} Likes", key=f"like_btn_{index}"):
+                self.toggle_like(index)
 
     def decode_base64_image(self, base64_string):
         """Decode a base64 image string to a PIL Image."""
         try:
-            if ',' in base64_string:
-                base64_string = base64_string.split(',')[1]
-            image_bytes = base64.b64decode(base64_string)
+            image_bytes = base64.b64decode(base64_string.split(',')[1] if ',' in base64_string else base64_string)
             return Image.open(BytesIO(image_bytes))
         except Exception as e:
             st.error(f"Error decoding image: {e}")
             return None
 
-    def render_project_details_expander(self, project, index):
-        """Render project details inside an expander."""
-        with st.expander("Details"):
-            # Display additional images (if available)
-            if project.get('image') and len(project['image']) > 1:
-                for i, img_str in enumerate(project['image'][1:]):  # Skip the first image
-                    additional_img = self.decode_base64_image(img_str)
-                    if additional_img:
-                        st.image(additional_img, caption=f"Additional Image {i + 1}", use_column_width=True)
-
-            # Project Details Sections
-            st.markdown(f"**Group Number:** {project.get('Group_number', 'N/A')}")
-            st.markdown(f"**Description:**\n{project.get('Description', 'No description available.')}")
-            
-            # Group Members
-            st.subheader("Group Members")
-            members = project.get('members', [])
-            if members:
-                for member in members:
-                    st.markdown(
-                        f"- **{member.get('name', 'Unknown')}** "
-                        f"(Roll No: {member.get('roll_no', 'N/A')}) "
-                        f"- {member.get('contribution', 'No specific contribution noted')}"
-                    )
-            else:
-                st.write("No group members information available.")
-            
-            # Faculty Members
-            st.subheader("Faculty Members")
-            faculty = project.get('Faculty', [])
-            if faculty:
-                for fac_member in faculty:
-                    st.markdown(f"- {fac_member}")
-            else:
-                st.write("No faculty members information available.")
-
-    def render_project_list(self):
-        """Render the list of projects with expandable details."""
-        st.title("Welcome to DP Open House")
-        self.load_projects()
-        
-        # Add clickable map with message
-        map_url = "https://drive.google.com/file/d/1aNzt_8xthj8wNcIYWFm6YAaxDhHmhKcn/view?usp=sharing"
-        
-        if not map_base64:
-            st.warning("Map image not configured. Please add base64 encoded map image.")
-        else:
-            st.markdown(
-                "<div style='text-align: center; margin-bottom: 20px;'>"
-                f"<p style='font-size: 16px; color: blue;'>📍 Click the map below to download location details ⬇️</p>"
-                f'<a href="{map_url}" target="_blank">'
-                f'<img src="data:image/png;base64,{map_base64}" style="width: 60%; margin: auto; display: block;">'
-                f'</a>'
-                "</div>",
-                unsafe_allow_html=True
-            )
-
-        if not st.session_state.projects:
-            self.load_projects()
-        
-        if st.session_state.projects:
-            for index, project in enumerate(st.session_state.projects):
-                with st.container():
-                    st.subheader(project.get('project_name', 'Unnamed Project'))
-                    st.write(f"**Group Number:** {project.get('Group_number', 'N/A')}")
-
-                    # Display the first image by default
-                    if project.get('image'):
-                        first_image = self.decode_base64_image(project['image'][0])
-                        if first_image:
-                            st.image(first_image, caption="Project Image", use_column_width=True)
-
-                    col1, col2 = st.columns([3, 1])
-                    with col1:
-                        self.render_project_details_expander(project, index)
-                    
-                    with col2:
-                        like_count = st.session_state.like_counts.get(index, 0)
-                        is_liked = index in st.session_state.liked_projects
-                        
-                        like_button = st.button(
-                            f"{'❤️' if is_liked else '🤍'} {like_count}", 
-                            key=f"like_{index}"
-                        )
-                        if like_button:
-                            self.toggle_like(index)
-
-                    st.markdown("---")
-        else:
-            st.warning("No projects found.")
-
     def run(self):
         """Main application runner."""
-        self.render_project_list()
+        st.title("Welcome to DP Open House")
+        self.load_projects()
+
+        if not st.session_state.projects:
+            st.warning("No projects found.")
+            return
+
+        # Render project list
+        for index, project in enumerate(st.session_state.projects):
+            with st.container():
+                self.render_project(project, index)
+                st.markdown("---")  # Separator between projects
 
 
-def main():
+# Run the app
+if __name__ == "__main__":
     app = GatherHubApp()
     app.run()
-
-
-if __name__ == "__main__":
-    main()
