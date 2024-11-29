@@ -390,7 +390,7 @@ class GatherHubApp:
 
     def render_project_list(self):
         """Render the list of projects with like prevention."""
-        st.title("📋 Project Showcase")
+        st.title("Welcome to DP Open House")
         self.load_projects()
         
         # Add clickable map with message
