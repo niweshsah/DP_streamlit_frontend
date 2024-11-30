@@ -14,10 +14,15 @@ import logging
 
 load_dotenv()
 
-rest_api_url = os.getenv("REST_API_URL")
-visiting_card_url = os.getenv("VISITING_CARD_URL")
-sender_email = os.getenv("EMAIL")
-sender_password = os.getenv("EMAIL_PASSWORD")
+
+rest_api_url =  'https://gatherhub-r7yr.onrender.com'
+
+visiting_card_url = 'https://niweshvistingcard.streamlit.app'
+
+# i am hardcodding for DP, please don't do anything
+sender_email = 'b23277@students.iitmandi.ac.in'
+sender_password = 'jmpi kksi mbss grgo'
+
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -51,6 +56,7 @@ Thank you for submitting your business card. Please find your QR code attached.
 Best regards,
 GatherHub Team"""
         
+
         msg = MIMEMultipart()
         msg['From'] = sender_email
         msg['To'] = email
