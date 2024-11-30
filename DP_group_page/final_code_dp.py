@@ -21,7 +21,7 @@ import os
 load_dotenv()
 
 
-  
+# today is our DP so please don't misuse before 1:30 pm
 sender_email1 = 'b23277@students.iitmandi.ac.in'
 sender_password1 = 'jmpi kksi mbss grgo'
 
