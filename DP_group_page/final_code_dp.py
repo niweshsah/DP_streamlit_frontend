@@ -21,25 +21,9 @@ import os
 load_dotenv()
 
 
-# Add verbose debugging
-load_dotenv(verbose=True)
-
-# Print out environment variables for debugging
-st.write("Current Working Directory:", os.getcwd())
-st.write("Environment Variables:")
-st.write("EMAIL:", os.getenv("EMAIL"))
-st.write("EMAIL_PASSWORD:", "***" if os.getenv("EMAIL_PASSWORD") else "Not Found")
-
-# Check if .env file is in the correct location
-import pathlib
-current_dir = pathlib.Path(__file__).parent.resolve()
-st.write("Checking .env in current directory:", current_dir)
-env_path = current_dir / '.env'
-st.write("Full .env path:", env_path)
-st.write(".env file exists:", env_path.exists())
   
-sender_email1 = os.getenv("EMAIL")
-sender_password1 = os.getenv("EMAIL_PASSWORD")
+sender_email1 = 'b23277@students.iitmandi.ac.in'
+sender_password1 = 'jmpi kksi mbss grgo'
 
 # print(f"Email: {sender_email1}")
 # print(f"Password: {sender_password1}")
