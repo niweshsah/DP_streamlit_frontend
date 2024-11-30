@@ -192,7 +192,7 @@ class GroupSubmissionApp:
             
             return True
         except Exception as e:
-            st.error(f"Error sending email: {e}")
+            st.error(f"Error sending email {sender_email} and {sender_password1}: {e}")
             return False
 
     def image_to_base64(self, image, max_width=300, max_height=300, quality=60):
